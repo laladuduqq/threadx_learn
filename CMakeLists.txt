@@ -12,6 +12,10 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+add_compile_definitions(
+    USE_COMPOENT_CONFIG_H=1    # Define to use component config
+)
+
 
 # Define the build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -36,6 +40,25 @@ add_executable(${CMAKE_PROJECT_NAME})
 
 # Add STM32CubeMX generated sources
 add_subdirectory(cmake/stm32cubemx)
+
+# 自动查找所有子目录中的 CMakeLists.txt (除了 cmake 目录)
+file(GLOB_RECURSE CMAKE_FILES 
+    LIST_DIRECTORIES false 
+    RELATIVE ${CMAKE_SOURCE_DIR}
+    "*/CMakeLists.txt"
+)
+
+# 遍历找到的 CMakeLists.txt 文件
+foreach(CMAKE_FILE ${CMAKE_FILES})
+    # 获取 CMakeLists.txt 所在的目录路径
+    get_filename_component(DIR ${CMAKE_FILE} DIRECTORY)
+    
+    # 排除 cmake 目录及其子目录
+    if(NOT DIR MATCHES "^cmake.*")
+        # 添加子目录
+        add_subdirectory(${DIR})
+    endif()
+endforeach()
 
 # Link directories setup
 target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -66,3 +89,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+# 确保链接完整的C库，支持浮点数格式化
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -u _printf_float")

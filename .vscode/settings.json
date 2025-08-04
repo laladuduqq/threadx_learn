@@ -19,4 +19,6 @@
         "--query-driver=/home/pan/complier/arm-gnu-toolchain/bin/arm-none-eabi-gcc"
     ],
     "cmake.ignoreCMakeListsMissing": true,
+    "trae.tab.enableRename": false,
+    "trae.tab.enableAutoImport": false,
 }

@@ -25,12 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "ulog.h"
+#include "ulog_port.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -47,7 +47,7 @@
 /* USER CODE BEGIN TX_Pool_Buffer */
 /* USER CODE END TX_Pool_Buffer */
 static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
-static TX_BYTE_POOL tx_app_byte_pool;
+TX_BYTE_POOL tx_app_byte_pool;
 
 /* USER CODE BEGIN PV */
 
@@ -93,7 +93,12 @@ VOID tx_application_define(VOID *first_unused_memory)
     }
 
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
-
+    ulog_port_init();
+    float value = 3.14159f;
+    ULOG_TAG_INFO("Pi value is %f", value);
+    ULOG_DEBUG("Debugging information: %s", "This is a debug message");
+    ULOG_WARNING("Warning: %s", "This is a warning message");
+    ULOG_ERROR("Error occurred: %s", "This is an error message");
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }
