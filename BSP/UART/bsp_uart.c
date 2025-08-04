@@ -5,6 +5,11 @@
 #include <string.h>
 
 
+#define LOG_TAG "BSP_UART"
+#include "ulog.h"
+#include "ulog_port.h"
+
+
 static UART_Device registered_uart[UART_MAX_INSTANCE_NUM] = {0}; // 结构体数组
 static bool uart_used[UART_MAX_INSTANCE_NUM] = {false};         // 添加使用状态标记
 static uint8_t default_buf[UART_MAX_INSTANCE_NUM][2][UART_DEFAULT_BUF_SIZE];
@@ -14,10 +19,15 @@ static void Start_Rx(UART_Device *inst);
 static void Process_Rx_Complete(UART_Device *inst, uint16_t Size);
 
 UART_Device* UART_Init(UART_Device_init_config *config) {
+    if (!config || !config->huart) {
+        ULOG_TAG_ERROR(LOG_TAG, "UART_Init: Invalid configuration");
+        return NULL;
+    }
     // 检查实例是否已存在
     for(int i=0; i<UART_MAX_INSTANCE_NUM; i++){
         if(uart_used[i] && registered_uart[i].huart == config->huart)
         {   
+            ULOG_TAG_ERROR(LOG_TAG, "UART_Init: Instance already exists");
             return NULL;
         }
     }
@@ -30,6 +40,7 @@ UART_Device* UART_Init(UART_Device_init_config *config) {
         }
     }
     if(free_index == -1) {
+        ULOG_TAG_ERROR(LOG_TAG, "UART_Init: No more instances available");
         return NULL;
     }
     // 初始化参数
@@ -59,12 +70,12 @@ UART_Device* UART_Init(UART_Device_init_config *config) {
     inst->event_flag = config->event_flag;
     //初始化事件标志组
     if (tx_event_flags_create(&inst->rx_event, "uart_event") != TX_SUCCESS) {
-        
+        ULOG_TAG_ERROR(LOG_TAG, "UART_Init: Failed to create event flags");
         return NULL;
     }
     // 初始化信号量
     if (tx_semaphore_create(&inst->tx_sem, "uart_sem", 1) != TX_SUCCESS) {
-        
+        ULOG_TAG_ERROR(LOG_TAG, "UART_Init: Failed to create semaphore");    
         tx_event_flags_delete(&inst->rx_event);
         return NULL;
     }
@@ -72,6 +83,11 @@ UART_Device* UART_Init(UART_Device_init_config *config) {
     uart_used[free_index] = true;
     // 启动接收
     Start_Rx(inst);
+    ULOG_TAG_INFO("%s device , UART config - RX mode: %d, TX mode: %d, buffer size: %d", 
+                    inst->huart->Instance == USART1 ? "USART1" :
+                   inst->huart->Instance == USART3 ? "USART3" :
+                   inst->huart->Instance == USART6 ? "USART6" : "Unknown",
+                   inst->rx_mode, inst->tx_mode, inst->rx_buf_size);
     // 返回实例指针
     return inst;
 }

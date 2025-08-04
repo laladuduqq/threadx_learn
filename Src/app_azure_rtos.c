@@ -25,8 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "bsp_uart.h"
 #include "ulog.h"
 #include "ulog_port.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,11 +96,6 @@ VOID tx_application_define(VOID *first_unused_memory)
 
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
     ulog_port_init();
-    float value = 3.14159f;
-    ULOG_TAG_INFO("Pi value is %f", value);
-    ULOG_DEBUG("Debugging information: %s", "This is a debug message");
-    ULOG_WARNING("Warning: %s", "This is a warning message");
-    ULOG_ERROR("Error occurred: %s", "This is an error message");
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }
