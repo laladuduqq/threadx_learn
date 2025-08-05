@@ -1,0 +1,120 @@
+#include "dwt.h"
+#include "stm32f407xx.h"
+
+static DWT_Time_t SysTime;
+static uint32_t CPU_FREQ_Hz, CPU_FREQ_Hz_ms, CPU_FREQ_Hz_us;
+static uint32_t CYCCNT_RountCount;
+static uint32_t CYCCNT_LAST;
+static uint64_t CYCCNT64;
+
+/**
+ * @brief 私有函数,用于检查DWT CYCCNT寄存器是否溢出,并更新CYCCNT_RountCount
+ * @attention 此函数假设两次调用之间的时间间隔不超过一次溢出
+ */
+static void DWT_CNT_Update(void)
+{
+    volatile uint32_t cnt_now = DWT->CYCCNT;
+    if (cnt_now < CYCCNT_LAST)
+        CYCCNT_RountCount++;
+
+    CYCCNT_LAST = cnt_now;
+}
+
+void DWT_Init(uint32_t CPU_Freq_mHz)
+{
+    /* 使能DWT外设 */
+    CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+
+    /* DWT CYCCNT寄存器计数清0 */
+    DWT->CYCCNT = (uint32_t)0u;
+
+    /* 使能Cortex-M DWT CYCCNT寄存器 */
+    DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+    CPU_FREQ_Hz = CPU_Freq_mHz * 1000000;
+    CPU_FREQ_Hz_ms = CPU_FREQ_Hz / 1000;
+    CPU_FREQ_Hz_us = CPU_FREQ_Hz / 1000000;
+    CYCCNT_RountCount = 0;
+
+    CYCCNT_LAST = DWT->CYCCNT;
+}
+
+float DWT_GetDeltaT(uint32_t *cnt_last)
+{
+    volatile uint32_t cnt_now = DWT->CYCCNT;
+    float dt = ((uint32_t)(cnt_now - *cnt_last)) / ((float)(CPU_FREQ_Hz));
+    *cnt_last = cnt_now;
+
+    DWT_CNT_Update();
+
+    return dt;
+}
+
+double DWT_GetDeltaT64(uint32_t *cnt_last)
+{
+    volatile uint32_t cnt_now = DWT->CYCCNT;
+    double dt = ((uint32_t)(cnt_now - *cnt_last)) / ((double)(CPU_FREQ_Hz));
+    *cnt_last = cnt_now;
+
+    DWT_CNT_Update();
+
+    return dt;
+}
+
+void DWT_SysTimeUpdate(void)
+{
+    volatile uint32_t cnt_now = DWT->CYCCNT;
+
+    DWT_CNT_Update();
+
+    CYCCNT64 = (uint64_t)CYCCNT_RountCount * (uint64_t)UINT32_MAX + (uint64_t)cnt_now;
+    SysTime.s = CYCCNT64 / CPU_FREQ_Hz;
+    uint64_t remainder = CYCCNT64 % CPU_FREQ_Hz;
+    SysTime.ms = remainder / CPU_FREQ_Hz_ms;
+    SysTime.us = (remainder % CPU_FREQ_Hz_ms) / CPU_FREQ_Hz_us;
+}
+
+// 内联函数
+static inline float get_timeline_s_fast(void)
+{
+    return SysTime.s + SysTime.ms * 0.001f + SysTime.us * 0.000001f;
+}
+static inline float get_timeline_ms_fast(void)
+{
+    return SysTime.s * 1000.0f + SysTime.ms + SysTime.us * 0.001f;
+}
+static inline uint64_t get_timeline_us_fast(void)
+{
+    return (uint64_t)SysTime.s * 1000000ULL + (uint64_t)SysTime.ms * 1000ULL + SysTime.us;
+}
+
+float DWT_GetTimeline_s(void)
+{
+    DWT_SysTimeUpdate();
+    return get_timeline_s_fast();
+}
+
+float DWT_GetTimeline_ms(void)
+{
+    DWT_SysTimeUpdate();
+    return get_timeline_ms_fast();
+}
+
+uint64_t DWT_GetTimeline_us(void)
+{
+    DWT_SysTimeUpdate();
+    return get_timeline_us_fast();
+}
+
+void DWT_Delay(float Delay)
+{
+    // 使用uint64_t避免可能的溢出问题
+    uint32_t tickstart = DWT->CYCCNT;
+    uint64_t wait = (uint64_t)(Delay * (float)CPU_FREQ_Hz);
+
+    // 避免溢出导致的死循环
+    while (((uint64_t)DWT->CYCCNT - tickstart) < wait) {
+        // 添加编译器屏障防止循环被优化掉
+        __asm__ volatile ("" ::: "memory");
+    }
+}

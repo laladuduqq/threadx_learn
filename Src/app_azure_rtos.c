@@ -25,10 +25,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp_uart.h"
 #include "ulog.h"
 #include "ulog_port.h"
-#include <string.h>
+#include "dwt.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -95,7 +94,9 @@ VOID tx_application_define(VOID *first_unused_memory)
     }
 
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
+    DWT_Init(168);
     ulog_port_init();
+    ULOG_INFO("ThreadX application initialized successfully");
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }

@@ -2,13 +2,14 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 08:18:34
+ * @LastEditTime: 2025-08-05 08:46:54
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.c
  * @Description: 
  */
 #include "ulog_port.h"
 #include "bsp_uart.h"
 #include "compoent_config.h"
+#include "dwt.h"
 #include "tx_api.h"
 #include "tx_port.h"
 #include "ulog.h"
@@ -64,13 +65,24 @@ static const char* get_color_by_level(ulog_level_t level) {
     }
 }
 
-// 使用ThreadX API实现时间戳函数
-static char* get_threadx_timestamp(void) {
+// // 使用ThreadX API实现时间戳函数
+// static char* get_threadx_timestamp(void) {
+//     static char timestamp_str[32];
+//     ULONG ticks = tx_time_get();
+//     // 假设系统时钟节拍率为1000Hz，即1tick=1ms
+//     // 可根据实际配置调整
+//     snprintf(timestamp_str, sizeof(timestamp_str), "[%lu]", ticks);
+//     return timestamp_str;
+// }
+
+// 使用DWT实现时间戳函数
+static char* get_dwt_timestamp(void) {
     static char timestamp_str[32];
-    ULONG ticks = tx_time_get();
-    // 假设系统时钟节拍率为1000Hz，即1tick=1ms
-    // 可根据实际配置调整
-    snprintf(timestamp_str, sizeof(timestamp_str), "[%lu]", ticks);
+    uint64_t us = DWT_GetTimeline_us();
+    // 格式化为 [秒.微秒] 格式，例如 [123.456789]
+    snprintf(timestamp_str, sizeof(timestamp_str), "[%lu.%06lu]", 
+             (unsigned long)(us / 1000000),
+             (unsigned long)(us % 1000000));
     return timestamp_str;
 }
 
@@ -129,14 +141,14 @@ static void async_console_logger(ulog_level_t level, char* msg) {
     const char* color = get_color_by_level(level);
     snprintf(log_buffer, LOG_BUFFER_SIZE, "%s%s [%s]: %s%s\r\n", 
              color,
-             get_threadx_timestamp(), 
+             get_dwt_timestamp(), 
              ulog_level_name(level), 
              msg,
              COLOR_RESET);
 #else
     // 不带颜色的日志输出，添加额外的回车符号
     snprintf(log_buffer, LOG_BUFFER_SIZE, "%s [%s]: %s\r\n", 
-             get_threadx_timestamp(), 
+             get_dwt_timestamp(), 
              ulog_level_name(level), 
              msg);
 #endif
@@ -166,14 +178,14 @@ void my_console_logger(ulog_level_t level,char *msg) {
     const char* color = get_color_by_level(level);
     len = snprintf(log_buffer, sizeof(log_buffer), "%s%s [%s]: %s%s\r\n", 
                   color,
-                  get_threadx_timestamp(), 
+                  get_dwt_timestamp(), 
                   ulog_level_name(level), 
                   msg,
                   COLOR_RESET);
 #else
     // 不带颜色的日志输出，添加额外的回车符号
     len = snprintf(log_buffer, sizeof(log_buffer), "%s [%s]: %s\r\n", 
-                  get_threadx_timestamp(), 
+                  get_dwt_timestamp(), 
                   ulog_level_name(level), 
                   msg);
 #endif
