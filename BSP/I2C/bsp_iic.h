@@ -2,8 +2,8 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-05 14:57:02
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 14:57:13
- * @FilePath: /threadx_learn/BSP/iic/bsp_iic.h
+ * @LastEditTime: 2025-08-05 15:37:08
+ * @FilePath: /threadx_learn/BSP/I2C/bsp_iic.h
  * @Description: 
  */
 #ifndef _BSP_IIC_H_
@@ -113,7 +113,7 @@ HAL_StatusTypeDef BSP_I2C_Receive(I2C_Device* dev, uint8_t* rx_data, uint16_t si
  * @details      适用于需要指定内存地址的读写操作
  * @param {I2C_Device*} dev，要操作的I2C设备实例
  * @param {uint16_t} mem_address，内存地址
- * @param {uint16_t} mem_add_size，内存地址大小
+ * @param {uint16_t} mem_add_size，选择I2C_MEMADD_SIZE_8BIT或I2C_MEMADD_SIZE_16BIT
  * @param {uint8_t*} data，数据指针
  * @param {uint16_t} size，数据大小
  * @param {uint8_t} is_write，1表示写操作，0表示读操作
