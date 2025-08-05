@@ -5,6 +5,8 @@ add_library(bsp STATIC
     SPI/bsp_spi.c
     FLASH/bsp_flash.c
     I2C/bsp_iic.c
+    PWM/bsp_pwm.c
+    CAN/bsp_can.c
 )
 
 # 设置包含目录
@@ -15,6 +17,8 @@ target_include_directories(bsp
         ${CMAKE_CURRENT_SOURCE_DIR}/SPI
         ${CMAKE_CURRENT_SOURCE_DIR}/FLASH
         ${CMAKE_CURRENT_SOURCE_DIR}/I2C
+        ${CMAKE_CURRENT_SOURCE_DIR}/PWM
+        ${CMAKE_CURRENT_SOURCE_DIR}/CAN
 )
 
 # 链接必要的库

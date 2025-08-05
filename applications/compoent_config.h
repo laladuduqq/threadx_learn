@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 15:52:36
+ * @LastEditTime: 2025-08-05 17:22:24
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -28,7 +28,11 @@
 #define MAX_DEVICES_PER_I2C_BUS 4      // 每条总线最大设备数
 //pwm配置宏定义
 #define MAX_PWM_DEVICES 10             // 最大PWM设备数量
-
+//can配置宏定义
+#define CAN_BUS_NUM 2               // 总线数量
+#define MAX_CAN_DEVICES_PER_BUS  8  // 每总线最大设备数
+#define CAN_SEND_RETRY_CNT  3       // 重试次数
+#define CAN_SEND_TIMEOUT_US 100     // 发送超时时间，单位微秒
 
 
 //组件配置宏定义
