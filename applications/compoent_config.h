@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 14:34:03
+ * @LastEditTime: 2025-08-05 15:01:50
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -23,7 +23,9 @@
 //flash配置宏定义
 #define USER_FLASH_SECTOR_ADDR    ADDR_FLASH_SECTOR_11
 #define USER_FLASH_SECTOR_NUMBER  FLASH_SECTOR_11
-
+//iic配置宏定义
+#define I2C_BUS_NUM 2                  // 总线数量
+#define MAX_DEVICES_PER_I2C_BUS 4      // 每条总线最大设备数
 
 
 

@@ -4,6 +4,7 @@ add_library(bsp STATIC
     DWT/dwt.c
     SPI/bsp_spi.c
     FLASH/bsp_flash.c
+    I2C/bsp_iic.c
 )
 
 # 设置包含目录
@@ -13,6 +14,7 @@ target_include_directories(bsp
         ${CMAKE_CURRENT_SOURCE_DIR}/DWT
         ${CMAKE_CURRENT_SOURCE_DIR}/SPI
         ${CMAKE_CURRENT_SOURCE_DIR}/FLASH
+        ${CMAKE_CURRENT_SOURCE_DIR}/I2C
 )
 
 # 链接必要的库
