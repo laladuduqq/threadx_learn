@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 09:42:23
+ * @LastEditTime: 2025-08-05 14:34:03
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -17,10 +17,14 @@
 #define UART_MAX_INSTANCE_NUM 3        //可用串口数量
 #define UART_RX_DONE_EVENT (0x01 << 0) //接收完成事件
 #define UART_DEFAULT_BUF_SIZE 32  // 添加默认最小缓冲区大小定义
-
 //spi配置宏定义
 #define SPI_BUS_NUM 2                  // 总线数量
 #define MAX_DEVICES_PER_BUS 4         // 每条总线最大设备数
+//flash配置宏定义
+#define USER_FLASH_SECTOR_ADDR    ADDR_FLASH_SECTOR_11
+#define USER_FLASH_SECTOR_NUMBER  FLASH_SECTOR_11
+
+
 
 
 //组件配置宏定义

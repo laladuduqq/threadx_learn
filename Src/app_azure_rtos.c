@@ -25,6 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "bsp_flash.h"
+#include "compoent_config.h"
+#include "tx_api.h"
+#include "tx_port.h"
 #include "ulog.h"
 #include "ulog_port.h"
 #include "dwt.h"
@@ -41,7 +45,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+static TX_THREAD test_thread;
+void testTask(ULONG thread_input);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -96,7 +101,11 @@ VOID tx_application_define(VOID *first_unused_memory)
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
     DWT_Init(168);
     ulog_port_init();
-    ULOG_INFO("ThreadX application initialized successfully");
+    BSP_Flash_Init();
+    static CHAR *test_thread_stack;
+    test_thread_stack = threadx_malloc(1024);
+    tx_thread_create(&test_thread, "testTask", testTask, 0,test_thread_stack, 1024, 5, 5, TX_NO_TIME_SLICE, TX_AUTO_START);
+    ULOG_TAG_INFO("ThreadX initialized successfully");
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }
@@ -104,5 +113,16 @@ VOID tx_application_define(VOID *first_unused_memory)
 }
 
 /* USER CODE BEGIN  0 */
-
+void testTask(ULONG thread_input)
+{
+    CHAR data[32] = "Hello ThreadX with ulog!";
+    BSP_UserFlash_Write((uint8_t*)data, sizeof(data));
+    CHAR read_buf[32] = {0};
+    BSP_UserFlash_Read((uint8_t*)read_buf, sizeof(read_buf));
+    ULOG_TAG_INFO("Read from flash: %s", read_buf);
+    while (1)
+    {
+        tx_thread_sleep(100);
+    }
+}
 /* USER CODE END  0 */
