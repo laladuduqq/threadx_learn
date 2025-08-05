@@ -8,6 +8,7 @@ add_library(bsp STATIC
     PWM/bsp_pwm.c
     CAN/bsp_can.c
     ADC/bsp_adc.c
+    GPIO/bsp_gpio.c
 )
 
 # 设置包含目录
@@ -21,6 +22,7 @@ target_include_directories(bsp
         ${CMAKE_CURRENT_SOURCE_DIR}/PWM
         ${CMAKE_CURRENT_SOURCE_DIR}/CAN
         ${CMAKE_CURRENT_SOURCE_DIR}/ADC
+        ${CMAKE_CURRENT_SOURCE_DIR}/GPIO
 )
 
 # 链接必要的库

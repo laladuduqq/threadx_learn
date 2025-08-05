@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "bsp_flash.h"
+#include "bsp_gpio.h"
 #include "compoent_config.h"
 #include "tx_api.h"
 #include "tx_port.h"
@@ -61,7 +62,9 @@ TX_BYTE_POOL tx_app_byte_pool;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+void button_callback(GPIO_EXTI_Event_Type event) {
+  ULOG_TAG_INFO("按键中断触发\n");
+}
 /* USER CODE END PFP */
 
 /**
@@ -102,9 +105,12 @@ VOID tx_application_define(VOID *first_unused_memory)
     DWT_Init(168);
     ulog_port_init();
     BSP_Flash_Init();
+    BSP_GPIO_EXTI_Module_Init();
     static CHAR *test_thread_stack;
     test_thread_stack = threadx_malloc(1024);
     tx_thread_create(&test_thread, "testTask", testTask, 0,test_thread_stack, 1024, 5, 5, TX_NO_TIME_SLICE, TX_AUTO_START);
+
+    BSP_GPIO_EXTI_Register_Callback(GPIO_PIN_0, button_callback);   // PA0按键
     ULOG_TAG_INFO("ThreadX initialized successfully");
     /* USER CODE END  App_ThreadX_Init_Success */
 
