@@ -197,7 +197,7 @@ HAL_StatusTypeDef BSP_PWM_Set_Frequency(PWM_Device* pwm_dev, uint32_t frequency)
     pwm_dev->pulse = (pwm_dev->period + 1) * current_duty_cycle / 100;
     __HAL_TIM_SET_COMPARE(pwm_dev->htim, pwm_dev->channel, pwm_dev->pulse);
     
-    ULOG_TAG_INFO("PWM frequency updated: %lu Hz, Duty Cycle: %d%%", frequency, current_duty_cycle);
+    ULOG_TAG_DEBUG("PWM frequency updated: %lu Hz, Duty Cycle: %d%%", frequency, current_duty_cycle);
     
     return HAL_OK;
 }
@@ -217,7 +217,7 @@ HAL_StatusTypeDef BSP_PWM_Set_DutyCycle(PWM_Device* pwm_dev, uint8_t duty_cycle)
     // 更新比较值
     __HAL_TIM_SET_COMPARE(pwm_dev->htim, pwm_dev->channel, pwm_dev->pulse);
     
-    ULOG_TAG_INFO("PWM duty cycle updated: %d%%", duty_cycle);
+    ULOG_TAG_DEBUG("PWM duty cycle updated: %d%%", duty_cycle);
     
     return HAL_OK;
 }
@@ -242,7 +242,7 @@ HAL_StatusTypeDef BSP_PWM_Set_Frequency_And_DutyCycle(PWM_Device* pwm_dev, uint3
     pwm_dev->pulse = (pwm_dev->period + 1) * duty_cycle / 100;
     __HAL_TIM_SET_COMPARE(pwm_dev->htim, pwm_dev->channel, pwm_dev->pulse);
     
-    ULOG_TAG_INFO("PWM frequency and duty cycle updated: %lu Hz, %d%%", frequency, duty_cycle);
+    ULOG_TAG_DEBUG("PWM frequency and duty cycle updated: %lu Hz, %d%%", frequency, duty_cycle);
     
     return HAL_OK;
 }

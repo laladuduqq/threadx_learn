@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 21:33:45
+ * @LastEditTime: 2025-08-05 22:30:26
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -43,7 +43,7 @@
 
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
-#define LOG_LEVEL_INFO ULOG_DEBUG_LEVEL          //日志等级
+#define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
 #define LOG_SETTING_UART huart6                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
