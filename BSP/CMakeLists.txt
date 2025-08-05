@@ -7,6 +7,7 @@ add_library(bsp STATIC
     I2C/bsp_iic.c
     PWM/bsp_pwm.c
     CAN/bsp_can.c
+    ADC/bsp_adc.c
 )
 
 # 设置包含目录
@@ -19,6 +20,7 @@ target_include_directories(bsp
         ${CMAKE_CURRENT_SOURCE_DIR}/I2C
         ${CMAKE_CURRENT_SOURCE_DIR}/PWM
         ${CMAKE_CURRENT_SOURCE_DIR}/CAN
+        ${CMAKE_CURRENT_SOURCE_DIR}/ADC
 )
 
 # 链接必要的库

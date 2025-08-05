@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 17:22:24
+ * @LastEditTime: 2025-08-05 17:36:37
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -33,6 +33,8 @@
 #define MAX_CAN_DEVICES_PER_BUS  8  // 每总线最大设备数
 #define CAN_SEND_RETRY_CNT  3       // 重试次数
 #define CAN_SEND_TIMEOUT_US 100     // 发送超时时间，单位微秒
+//adc配置宏定义
+#define ADC_DEVICE_NUM 4         // 最大ADC设备数
 
 
 //组件配置宏定义
