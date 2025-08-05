@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-04 19:51:37
+ * @LastEditTime: 2025-08-05 08:18:34
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.c
  * @Description: 
  */
@@ -181,7 +181,7 @@ void my_console_logger(ulog_level_t level,char *msg) {
     if (len > 0) {
         // 使用UART发送函数输出日志
         if (log_uart != NULL) {
-            UART_Send(log_uart, (uint8_t*)log_buffer, (uint16_t)len);
+            BSP_UART_Send(log_uart, (uint8_t*)log_buffer, (uint16_t)len);
         } 
     }
     // 释放互斥锁
@@ -233,7 +233,7 @@ void ulog_port_init(void)
         .event_flag = UART_RX_DONE_EVENT,
     };
 
-    log_uart = UART_Init(&log_uart_cfg);
+    log_uart = BSP_UART_Init(&log_uart_cfg);
     ULOG_INIT();
     ULOG_SUBSCRIBE(my_console_logger, LOG_LEVEL_INFO);
 }

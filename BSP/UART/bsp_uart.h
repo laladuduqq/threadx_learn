@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-07-01 13:39:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-04 18:39:52
+ * @LastEditTime: 2025-08-05 08:17:45
  * @FilePath: /threadx_learn/BSP/UART/bsp_uart.h
  * @Description: 
  */
@@ -81,7 +81,7 @@ typedef struct {
  * @param        config：UART_Device_init_config指针
  * @return       UART_Device*：指向初始化后的UART_Device结构体指针
  */
-UART_Device* UART_Init(UART_Device_init_config *config);
+UART_Device* BSP_UART_Init(UART_Device_init_config *config);
 /**
  * @description: UART发送函数
  * @details      发送数据到UART设备
@@ -90,20 +90,20 @@ UART_Device* UART_Init(UART_Device_init_config *config);
  * @param        len：数据长度
  * @return       HAL_StatusTypeDef：HAL状态码
  */
-HAL_StatusTypeDef UART_Send(UART_Device *inst, uint8_t *data, uint16_t len);
+HAL_StatusTypeDef BSP_UART_Send(UART_Device *inst, uint8_t *data, uint16_t len);
 /**
  * @description: UART反初始化函数
  * @details      释放UART设备资源，删除事件标志组和信号量
  * @param        inst：UART_Device指针
  * @return {*}
  */
-void UART_Deinit(UART_Device *inst);
+void BSP_UART_Deinit(UART_Device *inst);
 /**
  * @brief  获取UART接收缓冲区的数据指针和长度
  * @param  inst: UART_Device指针
  * @param  data: 指向非活动缓冲区指针的指针，返回数据区地址
  * @retval 实际接收的字节数
  */
-int UART_Read(UART_Device *inst, uint8_t **data);
+int BSP_UART_Read(UART_Device *inst, uint8_t **data);
 
 #endif /* __BSP_UART_H__ */
