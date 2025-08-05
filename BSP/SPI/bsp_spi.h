@@ -12,8 +12,14 @@
 #include "spi.h"
 #include "tx_api.h"
 
+#if defined(USE_COMPOENT_CONFIG_H) && USE_COMPOENT_CONFIG_H
+#include "compoent_config.h"
+#else
 #define SPI_BUS_NUM 2                  // 总线数量
 #define MAX_DEVICES_PER_BUS 4         // 每条总线最大设备数
+#endif // _COMPOENT_CONFIG_H_
+
+
 
 
 /* 传输模式枚举 */

@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:16
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-04 20:10:36
+ * @LastEditTime: 2025-08-05 09:43:25
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.h
  * @Description: 
  */
@@ -20,6 +20,8 @@
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 1                      //启用异步日志
 #define LOG_BUFFER_SIZE 512                     //日志缓冲区大小
+#define LOG_THREAD_STACK_SIZE 1024              //日志线程栈大小
+#define LOG_THREAD_PRIORITY 1                   //日志线程优先级    
 #endif // _COMPOENT_CONFIG_H_
 
 // 默认TAG定义，如果用户没有定义则使用默认值

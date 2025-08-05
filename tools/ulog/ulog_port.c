@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 08:56:59
+ * @LastEditTime: 2025-08-05 09:41:38
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.c
  * @Description: 
  */
@@ -215,12 +215,12 @@ void ulog_port_init(void)
 
     // 用内存池分配线程栈
     static CHAR *log_thread_stack; //防止某些情况下栈被优化掉
-    log_thread_stack = threadx_malloc(1024);
+    log_thread_stack = threadx_malloc(LOG_THREAD_STACK_SIZE);
 
     // 创建日志线程
     tx_thread_create(&log_thread, "Log Thread", log_thread_entry, 0,
-                     log_thread_stack, 1024,
-                     1, 1, TX_NO_TIME_SLICE, TX_AUTO_START);
+                     log_thread_stack, LOG_THREAD_STACK_SIZE,
+                     LOG_THREAD_PRIORITY, LOG_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 #else
     // 初始化互斥锁
     tx_mutex_create(&log_mutex, "Log Mutex", TX_NO_INHERIT);

@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-04 19:47:44
+ * @LastEditTime: 2025-08-05 09:42:23
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -18,6 +18,10 @@
 #define UART_RX_DONE_EVENT (0x01 << 0) //接收完成事件
 #define UART_DEFAULT_BUF_SIZE 32  // 添加默认最小缓冲区大小定义
 
+//spi配置宏定义
+#define SPI_BUS_NUM 2                  // 总线数量
+#define MAX_DEVICES_PER_BUS 4         // 每条总线最大设备数
+
 
 //组件配置宏定义
 
@@ -27,7 +31,10 @@
 #define LOG_SETTING_UART huart6                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
+//注意，下面三个宏定义只有在启用异步日志时才有效
 #define LOG_BUFFER_SIZE 512                     //日志缓冲区大小
+#define LOG_THREAD_STACK_SIZE 1024              //日志线程栈大小
+#define LOG_THREAD_PRIORITY 1                   //日志线程优先级    
 
 
 
