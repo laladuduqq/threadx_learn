@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 08:46:54
+ * @LastEditTime: 2025-08-05 08:56:59
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.c
  * @Description: 
  */
@@ -213,8 +213,8 @@ void ulog_port_init(void)
     tx_queue_create(&log_queue, "Log Queue", sizeof(char*)/sizeof(ULONG), 
                     log_queue_buffer, sizeof(log_queue_buffer));
 
-    // 用内存池分配监控线程栈
-    CHAR *log_thread_stack;
+    // 用内存池分配线程栈
+    static CHAR *log_thread_stack; //防止某些情况下栈被优化掉
     log_thread_stack = threadx_malloc(1024);
 
     // 创建日志线程
