@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 13:01:51
+ * @LastEditTime: 2025-08-06 15:36:44
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -87,7 +87,15 @@
     #define IMU_THREAD_STACK_SIZE 1024     // imu线程栈大小
     #define IMU_THREAD_PRIORITY 4          // imu线程优先级
 #endif
-
+//referee配置宏定义
+#define REFEREE_ENABLE 0               // 开启裁判系统功能
+#if REFEREE_ENABLE
+    #define REFEREE_RECV_THREAD_STACK_SIZE 1024    // 裁判系统接收线程栈大小
+    #define REFEREE_RECV_THREAD_PRIORITY 7         // 裁判系统接收线程优先级
+    #define REFEREE_SEND_THREAD_STACK_SIZE 1024    // 裁判系统发送线程栈大小
+    #define REFEREE_SEND_THREAD_PRIORITY 12        // 裁判系统发送线程优先级
+    #define REFEREE_UART_RX_BUF_SIZE 1024          // 裁判系统接收缓冲区大小
+#endif
 
 
 

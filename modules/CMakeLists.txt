@@ -12,6 +12,9 @@ add_library(modules STATIC
         OFFLINE/offline.c
         IMU/imu.c
         IMU/imu_task.c
+        referee/referee.c
+        referee/crc_rm.c
+        referee/referee_UI.c
 )
 
 # 设置包含目录
@@ -24,6 +27,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/BEEP
         ${CMAKE_CURRENT_SOURCE_DIR}/OFFLINE
         ${CMAKE_CURRENT_SOURCE_DIR}/IMU
+        ${CMAKE_CURRENT_SOURCE_DIR}/referee
 )
 
 # 链接必要的库

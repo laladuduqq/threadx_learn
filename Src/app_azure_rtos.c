@@ -25,14 +25,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "BMI088.h"
-#include "beep.h"
-#include "compoent_config.h"
-#include "offline.h"
 #include "robot_init.h"
-#include "systemwatch.h"
 #include "tx_api.h"
-#include "ulog_port.h"
 #include "ulog.h"
 /* USER CODE END Includes */
 
