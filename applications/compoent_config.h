@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 15:36:44
+ * @LastEditTime: 2025-08-06 16:08:26
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -96,8 +96,19 @@
     #define REFEREE_SEND_THREAD_PRIORITY 12        // 裁判系统发送线程优先级
     #define REFEREE_UART_RX_BUF_SIZE 1024          // 裁判系统接收缓冲区大小
 #endif
-
-
+//remote配置宏定义
+//在这里决定控制来源 注意键鼠控制部分 图传优先遥控器 uart部分c板只有 huart1/huart3/huart6
+#define REMOTE_SOURCE    0 //遥控器选择 sbus 0 dt7 1 none 2
+#define REMOTE_UART      huart3 //遥控器使用的串口
+#define REMOTE_VT_SOURCE 2  //图传选择 vt02 0 vt03 1 none 2
+#define REMOTE_VT_UART   huart6 //图传使用的串口
+#define REMOTE_UART_RX_BUF_SIZE 30 // 定义统一遥控器接收缓冲区大小
+//dt7
+#define DT7_DEAD_ZONE 5 // 定义遥控器死区范围
+//sbus
+#define SBUS_DEAD_ZONE 5 // 定义遥控器死区范围
+//vt03
+#define VT03_DEAD_ZONE 5 // 定义遥控器死区范围
 
 
 

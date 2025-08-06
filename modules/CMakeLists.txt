@@ -15,6 +15,11 @@ add_library(modules STATIC
         referee/referee.c
         referee/crc_rm.c
         referee/referee_UI.c
+        REMOTE/remote.c
+        REMOTE/dt7.c
+        REMOTE/sbus.c
+        REMOTE/vt03.c
+        REMOTE/vt02.c
 )
 
 # 设置包含目录
@@ -28,6 +33,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/OFFLINE
         ${CMAKE_CURRENT_SOURCE_DIR}/IMU
         ${CMAKE_CURRENT_SOURCE_DIR}/referee
+        ${CMAKE_CURRENT_SOURCE_DIR}/REMOTE
 )
 
 # 链接必要的库
