@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 22:30:26
+ * @LastEditTime: 2025-08-06 09:43:04
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -40,6 +40,18 @@
 
 
 //组件配置宏定义
+
+//systemwatch配置宏定义
+#define SystemWatch_Enable 1       // 开启系统监控功能,注意下述宏定义只有在开启系统监控功能时才会生效
+#if SystemWatch_Enable
+    #define MAX_MONITORED_TASKS 10              // 最大监控任务数
+    #define TASK_BLOCK_TIMEOUT 1                // 任务阻塞判定时间 (s)
+    #define SystemWatch_Reset_Enable 0          // 检测到线程阻塞，是否系统重置开关，0-->删除对应的阻塞线程，1-->重置
+    #define SystemWatch_Iwdg_Enable 1           // 开启看门狗功能
+    #define SYSTEMWATCH_THREAD_STACK_SIZE 1024  //线程栈大小
+    #define SYSTEMWATCH_THREAD_PRIORITY 2       //线程优先级 
+#endif  
+
 
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志

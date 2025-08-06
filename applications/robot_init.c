@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 09:02:50
+ * @LastEditTime: 2025-08-06 09:53:18
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -13,6 +13,7 @@
 #include "bsp_flash.h"
 #include "bsp_gpio.h"
 #include "dwt.h"
+#include "systemwatch.h"
 #include "ulog_port.h"
 
 void bsp_init(void){
@@ -23,7 +24,8 @@ void bsp_init(void){
     BSP_ADC_Init();
 }
 
-void modules_init(void){
+void modules_init(TX_BYTE_POOL *pool){
     RGB_init();  // 初始化RGB灯
     BMI088_init();  // 初始化BMI088传感器
+    SYSTEMWATCH_INIT(pool);  // 初始化系统监控
 }

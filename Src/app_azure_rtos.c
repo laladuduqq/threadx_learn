@@ -28,6 +28,7 @@
 #include "BMI088.h"
 #include "compoent_config.h"
 #include "robot_init.h"
+#include "systemwatch.h"
 #include "tx_api.h"
 #include "ulog_port.h"
 #include "ulog.h"
@@ -97,7 +98,7 @@ VOID tx_application_define(VOID *first_unused_memory)
       /* USER CODE END  App_ThreadX_Init_Error */
     }
 
-    /* USER CODE BEGIN  App_ThreadX_Init_Success */    
+    /* USER CODE BEGIN  App_ThreadX_Init_Success */
     static CHAR *init_thread_stack;
     init_thread_stack = threadx_malloc(1024);
     tx_thread_create(&init_thread, "initTask", init_Task, 0,init_thread_stack, 1024, 0, 0, TX_NO_TIME_SLICE, TX_AUTO_START);
@@ -114,13 +115,14 @@ void init_Task(ULONG thread_input)
     // 保存当前中断状态并禁用中断
     UINT old_posture = tx_interrupt_control(TX_INT_DISABLE);
     bsp_init();
-    modules_init();
+    modules_init(&tx_app_byte_pool);
     // 恢复中断状态
     tx_interrupt_control(old_posture);
+
+    SYSTEMWATCH_REGISTER_TASK(&init_thread, "InitTask");
     while (1)
     {
-      static BMI088_GET_Data_t data;
-      data = BMI088_GET_DATA();
+      SYSTEMWATCH_UPDATE_TASK(&init_thread);
       tx_thread_sleep(1);
     }
 }
