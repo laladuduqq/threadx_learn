@@ -25,6 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "BMI088.h"
 #include "RGB.h"
 #include "bsp_adc.h"
 #include "bsp_flash.h"
@@ -48,8 +49,8 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-static TX_THREAD test_thread;
-void testTask(ULONG thread_input);
+static TX_THREAD init_thread;
+void init_Task(ULONG thread_input);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -101,16 +102,10 @@ VOID tx_application_define(VOID *first_unused_memory)
       /* USER CODE END  App_ThreadX_Init_Error */
     }
 
-    /* USER CODE BEGIN  App_ThreadX_Init_Success */
-    DWT_Init(168);
-    ulog_port_init();
-    BSP_Flash_Init();
-    BSP_ADC_Init();
-    BSP_GPIO_EXTI_Module_Init();
-    RGB_init();
-    static CHAR *test_thread_stack;
-    test_thread_stack = threadx_malloc(1024);
-    tx_thread_create(&test_thread, "testTask", testTask, 0,test_thread_stack, 1024, 5, 5, TX_NO_TIME_SLICE, TX_AUTO_START);
+    /* USER CODE BEGIN  App_ThreadX_Init_Success */    
+    static CHAR *init_thread_stack;
+    init_thread_stack = threadx_malloc(1024);
+    tx_thread_create(&init_thread, "initTask", init_Task, 0,init_thread_stack, 1024, 0, 0, TX_NO_TIME_SLICE, TX_AUTO_START);
     ULOG_TAG_INFO("ThreadX initialized successfully");
     /* USER CODE END  App_ThreadX_Init_Success */
 
@@ -119,21 +114,24 @@ VOID tx_application_define(VOID *first_unused_memory)
 }
 
 /* USER CODE BEGIN  0 */
-void testTask(ULONG thread_input)
+void init_Task(ULONG thread_input)
 {
-
+    // 保存当前中断状态并禁用中断
+    UINT old_posture = tx_interrupt_control(TX_INT_DISABLE);
+    DWT_Init(168);
+    ulog_port_init();
+    BSP_Flash_Init();
+    BSP_ADC_Init();
+    BSP_GPIO_EXTI_Module_Init();
+    RGB_init();
+    BMI088_init();
+    // 恢复之前的中断状态
+    tx_interrupt_control(old_posture);
     while (1)
     {
-      RGB_show(LED_Blue);
-      tx_thread_sleep(100);
-      RGB_show(LED_Green);
-      tx_thread_sleep(100);
-      RGB_show(LED_Red);
-      tx_thread_sleep(100);
-      RGB_show(LED_Yellow);
-      tx_thread_sleep(100);
-      RGB_show(LED_White);
-      tx_thread_sleep(100);
+      static BMI088_GET_Data_t data;
+      data = BMI088_GET_DATA();
+      tx_thread_sleep(1);
     }
 }
 /* USER CODE END  0 */
