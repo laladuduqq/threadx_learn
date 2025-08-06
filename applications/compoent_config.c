@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 18:17:58
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-01 18:34:32
+ * @LastEditTime: 2025-08-06 13:22:03
  * @FilePath: /threadx_learn/applications/compoent_config.c
  * @Description: 
  */
@@ -16,7 +16,7 @@ extern TX_BYTE_POOL tx_app_byte_pool;
 // 内存分配函数
 void* threadx_malloc(size_t size) {
     void *ptr = NULL;
-    if (tx_byte_allocate(&tx_app_byte_pool, &ptr, size, TX_NO_WAIT) == TX_SUCCESS) {
+    if (tx_byte_allocate(&tx_app_byte_pool, &ptr, size, TX_WAIT_FOREVER) == TX_SUCCESS) {
         return ptr;
     } else {
         return NULL;

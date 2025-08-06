@@ -10,6 +10,8 @@ add_library(modules STATIC
         systemwatch/systemwatch.c
         BEEP/beep.c
         OFFLINE/offline.c
+        IMU/imu.c
+        IMU/imu_task.c
 )
 
 # 设置包含目录
@@ -21,6 +23,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/systemwatch
         ${CMAKE_CURRENT_SOURCE_DIR}/BEEP
         ${CMAKE_CURRENT_SOURCE_DIR}/OFFLINE
+        ${CMAKE_CURRENT_SOURCE_DIR}/IMU
 )
 
 # 链接必要的库

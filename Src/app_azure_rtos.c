@@ -102,7 +102,7 @@ VOID tx_application_define(VOID *first_unused_memory)
 
     /* USER CODE BEGIN  App_ThreadX_Init_Success */
     static CHAR *init_thread_stack;
-    init_thread_stack = threadx_malloc(1024);
+    tx_byte_allocate(&tx_app_byte_pool, (VOID **)&init_thread_stack, 1024, TX_NO_WAIT);
     tx_thread_create(&init_thread, "initTask", init_Task, 0,init_thread_stack, 1024, 0, 0, TX_NO_TIME_SLICE, TX_AUTO_START);
     /* USER CODE END  App_ThreadX_Init_Success */
 
@@ -120,16 +120,6 @@ void init_Task(ULONG thread_input)
     // 恢复中断状态
     tx_interrupt_control(old_posture);
     ULOG_TAG_INFO("robot init success");
-    static uint8_t offline_index;
-
-    OfflineDeviceInit_t offline_init = {
-            .name = "test", // 不要超过32字节
-            .timeout_ms = 100, //检测时间
-            .level = OFFLINE_LEVEL_HIGH, //检测等级
-            .beep_times = 3, //beep次数
-            .enable = OFFLINE_ENABLE, //是否开启离线检测
-    };
-    offline_index = OFFLINE_DEVICE_REGISTER(&offline_init);
     while (1)
     {
       
