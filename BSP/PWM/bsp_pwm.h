@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-05 15:47:06
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 15:47:10
+ * @LastEditTime: 2025-08-06 08:59:52
  * @FilePath: /threadx_learn/BSP/PWM/bsp_pwm.h
  * @Description: 
  */
@@ -57,7 +57,7 @@ typedef struct {
  * @param {PWM_Init_Config*} config PWM初始化配置
  * @return {PWM_Device*} 成功返回PWM设备实例指针，失败返回NULL
  */
-PWM_Device* BSP_PWM_Init(PWM_Init_Config* config);
+PWM_Device* BSP_PWM_Device_Init(PWM_Init_Config* config);
 
 /**
  * @description: 启动PWM输出

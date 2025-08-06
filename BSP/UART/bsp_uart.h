@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-07-01 13:39:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 08:17:45
+ * @LastEditTime: 2025-08-06 08:59:32
  * @FilePath: /threadx_learn/BSP/UART/bsp_uart.h
  * @Description: 
  */
@@ -81,7 +81,7 @@ typedef struct {
  * @param        config：UART_Device_init_config指针
  * @return       UART_Device*：指向初始化后的UART_Device结构体指针
  */
-UART_Device* BSP_UART_Init(UART_Device_init_config *config);
+UART_Device* BSP_UART_Device_Init(UART_Device_init_config *config);
 /**
  * @description: UART发送函数
  * @details      发送数据到UART设备

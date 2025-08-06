@@ -90,7 +90,7 @@ static HAL_StatusTypeDef configure_pwm_channel(PWM_Device* pwm_dev) {
     return HAL_TIM_PWM_ConfigChannel(pwm_dev->htim, &sConfigOC, pwm_dev->channel);
 }
 
-PWM_Device* BSP_PWM_Init(PWM_Init_Config* config) {
+PWM_Device* BSP_PWM_Device_Init(PWM_Init_Config* config) {
     if (!config || !config->htim || 
         config->duty_cycle > 100 || 
         config->frequency == 0) {

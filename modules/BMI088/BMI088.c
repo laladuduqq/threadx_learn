@@ -230,7 +230,7 @@ void bmi088_imu_temp_init(void){
         .mode = PWM_MODE_NORMAL
     };
     
-    bmi_temp_pwm = BSP_PWM_Init(&pwm_config);
+    bmi_temp_pwm = BSP_PWM_Device_Init(&pwm_config);
     if (bmi_temp_pwm) {
         BSP_PWM_Start(bmi_temp_pwm);
     }

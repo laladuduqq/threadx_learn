@@ -26,16 +26,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BMI088.h"
-#include "RGB.h"
-#include "bsp_adc.h"
-#include "bsp_flash.h"
-#include "bsp_gpio.h"
 #include "compoent_config.h"
+#include "robot_init.h"
 #include "tx_api.h"
-#include "tx_port.h"
-#include "ulog.h"
 #include "ulog_port.h"
-#include "dwt.h"
+#include "ulog.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,14 +113,9 @@ void init_Task(ULONG thread_input)
 {
     // 保存当前中断状态并禁用中断
     UINT old_posture = tx_interrupt_control(TX_INT_DISABLE);
-    DWT_Init(168);
-    ulog_port_init();
-    BSP_Flash_Init();
-    BSP_ADC_Init();
-    BSP_GPIO_EXTI_Module_Init();
-    RGB_init();
-    BMI088_init();
-    // 恢复之前的中断状态
+    bsp_init();
+    modules_init();
+    // 恢复中断状态
     tx_interrupt_control(old_posture);
     while (1)
     {

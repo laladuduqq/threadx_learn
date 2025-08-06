@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-04 17:25:01
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 09:41:38
+ * @LastEditTime: 2025-08-06 09:06:00
  * @FilePath: /threadx_learn/tools/ulog/ulog_port.c
  * @Description: 
  */
@@ -245,7 +245,7 @@ void ulog_port_init(void)
         .event_flag = UART_RX_DONE_EVENT,
     };
 
-    log_uart = BSP_UART_Init(&log_uart_cfg);
+    log_uart = BSP_UART_Device_Init(&log_uart_cfg);
     ULOG_INIT();
     ULOG_SUBSCRIBE(my_console_logger, LOG_LEVEL_INFO);
 }

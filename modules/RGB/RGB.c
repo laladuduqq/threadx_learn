@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-05 22:16:27
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 22:24:54
+ * @LastEditTime: 2025-08-06 09:06:16
  * @FilePath: /threadx_learn/modules/RGB/RGB.c
  * @Description: 
  */
@@ -44,9 +44,9 @@ void RGB_init(void)
     };
     
     // 初始化PWM设备
-    rgb_red_pwm = BSP_PWM_Init(&red_config);
-    rgb_green_pwm = BSP_PWM_Init(&green_config);
-    rgb_blue_pwm = BSP_PWM_Init(&blue_config);
+    rgb_red_pwm   = BSP_PWM_Device_Init(&red_config);
+    rgb_green_pwm = BSP_PWM_Device_Init(&green_config);
+    rgb_blue_pwm  = BSP_PWM_Device_Init(&blue_config);
     
     // 启动PWM输出
     if (rgb_red_pwm) {

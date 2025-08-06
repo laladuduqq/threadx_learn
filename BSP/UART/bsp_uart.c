@@ -18,7 +18,7 @@ static uint8_t default_buf[UART_MAX_INSTANCE_NUM][2][UART_DEFAULT_BUF_SIZE];
 static void Start_Rx(UART_Device *inst);
 static void Process_Rx_Complete(UART_Device *inst, uint16_t Size);
 
-UART_Device* BSP_UART_Init(UART_Device_init_config *config) {
+UART_Device* BSP_UART_Device_Init(UART_Device_init_config *config) {
     if (!config || !config->huart) {
         ULOG_TAG_ERROR(LOG_TAG, "UART_Init: Invalid configuration");
         return NULL;
