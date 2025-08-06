@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 10:51:09
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 11:21:47
+ * @LastEditTime: 2025-08-06 16:20:18
  * @FilePath: /threadx_learn/modules/OFFLINE/offline.c
  * @Description: 
  */
@@ -199,6 +199,7 @@ static void rgb_ctrl_times(void)
     static uint32_t rgb_tick;
     static uint32_t times_tick;
     static uint8_t times;
+    static bool led_on = false;  // 添加LED状态标志
 
     if (DWT_GetTimeline_ms() - rgb_tick > BEEP_PERIOD)
     {
@@ -211,16 +212,29 @@ static void rgb_ctrl_times(void)
         if (DWT_GetTimeline_ms() - times_tick < BEEP_ON_TIME)
         {
             RGB_show(LED_Red);  // 红灯表示设备离线
+            led_on = true;
         }
         else if (DWT_GetTimeline_ms() - times_tick < BEEP_ON_TIME + BEEP_OFF_TIME)
         {
             RGB_show(LED_Black);  // 熄灭灯
+            led_on = false;
         }
         else
         {
             times--;
             times_tick = DWT_GetTimeline_ms();
         }
+    }
+    // 当times为0但有设备离线时（beep_times=0的情况），LED常亮红色
+    else if (times == 0 && get_system_status() != 0) 
+    {
+        RGB_show(LED_Red);
+        led_on = true;
+    }
+    // 当没有设备离线时，恢复绿灯
+    else if (!led_on) 
+    {
+        RGB_show(LED_Green);  // 表示所有设备都在线
     }
 }
 
