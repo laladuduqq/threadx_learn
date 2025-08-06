@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 16:08:26
+ * @LastEditTime: 2025-08-06 16:14:06
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -95,6 +95,7 @@
     #define REFEREE_SEND_THREAD_STACK_SIZE 1024    // 裁判系统发送线程栈大小
     #define REFEREE_SEND_THREAD_PRIORITY 12        // 裁判系统发送线程优先级
     #define REFEREE_UART_RX_BUF_SIZE 1024          // 裁判系统接收缓冲区大小
+    #define REFEREE_UART      huart6              // 裁判系统使用的串口
 #endif
 //remote配置宏定义
 //在这里决定控制来源 注意键鼠控制部分 图传优先遥控器 uart部分c板只有 huart1/huart3/huart6

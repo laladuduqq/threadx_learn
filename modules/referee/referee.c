@@ -39,7 +39,7 @@ void RefereeInit(TX_BYTE_POOL *pool)
     referee_info.offline_index = offline_device_register(&offline_init);
 
     UART_Device_init_config uart6_cfg = {
-        .huart = &huart6,
+        .huart = &REFEREE_UART,
         .expected_len = 0,       // 不定长
         .rx_buf_size = REFEREE_UART_RX_BUF_SIZE,
         .rx_buf = (uint8_t (*)[2])referee_buf,
