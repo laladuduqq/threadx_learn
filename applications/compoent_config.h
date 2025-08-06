@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 16:22:42
+ * @LastEditTime: 2025-08-06 23:39:04
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -15,7 +15,7 @@
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
 #define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart6                 //使用的串口
+#define LOG_SETTING_UART huart1                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
 #if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
@@ -110,6 +110,9 @@
 #define SBUS_DEAD_ZONE 5 // 定义遥控器死区范围
 //vt03
 #define VT03_DEAD_ZONE 5 // 定义遥控器死区范围
+//board_com配置宏定义
+#define GIMBAL_ID 0X310
+#define CHASSIS_ID 0X311
 
 
 

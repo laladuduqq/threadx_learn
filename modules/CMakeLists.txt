@@ -20,6 +20,7 @@ add_library(modules STATIC
         REMOTE/sbus.c
         REMOTE/vt03.c
         REMOTE/vt02.c
+        board_com/board_com.c
 )
 
 # 设置包含目录
@@ -34,6 +35,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/IMU
         ${CMAKE_CURRENT_SOURCE_DIR}/referee
         ${CMAKE_CURRENT_SOURCE_DIR}/REMOTE
+        ${CMAKE_CURRENT_SOURCE_DIR}/board_com
 )
 
 # 链接必要的库
