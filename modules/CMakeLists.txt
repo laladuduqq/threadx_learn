@@ -8,6 +8,7 @@ add_library(modules STATIC
         algorithm/user_lib.c 
         BMI088/BMI088.c
         systemwatch/systemwatch.c
+        BEEP/beep.c
 )
 
 # 设置包含目录
@@ -17,6 +18,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/algorithm
         ${CMAKE_CURRENT_SOURCE_DIR}/BMI088
         ${CMAKE_CURRENT_SOURCE_DIR}/systemwatch
+        ${CMAKE_CURRENT_SOURCE_DIR}/BEEP
 )
 
 # 链接必要的库

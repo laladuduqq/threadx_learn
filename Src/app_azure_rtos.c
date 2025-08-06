@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BMI088.h"
+#include "beep.h"
 #include "compoent_config.h"
 #include "robot_init.h"
 #include "systemwatch.h"
@@ -102,7 +103,6 @@ VOID tx_application_define(VOID *first_unused_memory)
     static CHAR *init_thread_stack;
     init_thread_stack = threadx_malloc(1024);
     tx_thread_create(&init_thread, "initTask", init_Task, 0,init_thread_stack, 1024, 0, 0, TX_NO_TIME_SLICE, TX_AUTO_START);
-    ULOG_TAG_INFO("ThreadX initialized successfully");
     /* USER CODE END  App_ThreadX_Init_Success */
 
   }
@@ -118,12 +118,12 @@ void init_Task(ULONG thread_input)
     modules_init(&tx_app_byte_pool);
     // 恢复中断状态
     tx_interrupt_control(old_posture);
-
-    SYSTEMWATCH_REGISTER_TASK(&init_thread, "InitTask");
+    ULOG_TAG_INFO("robot init success");
+    beep_set_times(5);
     while (1)
     {
-      SYSTEMWATCH_UPDATE_TASK(&init_thread);
-      tx_thread_sleep(1);
+      beep_ctrl_times();
+      tx_thread_sleep(10);
     }
 }
 /* USER CODE END  0 */
