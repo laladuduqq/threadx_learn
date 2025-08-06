@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 10:40:53
+ * @LastEditTime: 2025-08-06 11:10:00
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -14,6 +14,7 @@
 #include "bsp_flash.h"
 #include "bsp_gpio.h"
 #include "dwt.h"
+#include "offline.h"
 #include "systemwatch.h"
 #include "ulog_port.h"
 
@@ -30,4 +31,5 @@ void modules_init(TX_BYTE_POOL *pool){
     beep_init();
     BMI088_init();  // 初始化BMI088传感器
     SYSTEMWATCH_INIT(pool);  // 初始化系统监控
+    OFFLINE_INIT(pool);  // 初始化离线检测模块
 }

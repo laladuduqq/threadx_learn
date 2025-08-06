@@ -28,6 +28,7 @@
 #include "BMI088.h"
 #include "beep.h"
 #include "compoent_config.h"
+#include "offline.h"
 #include "robot_init.h"
 #include "systemwatch.h"
 #include "tx_api.h"
@@ -119,10 +120,19 @@ void init_Task(ULONG thread_input)
     // 恢复中断状态
     tx_interrupt_control(old_posture);
     ULOG_TAG_INFO("robot init success");
-    beep_set_times(5);
+    static uint8_t offline_index;
+
+    OfflineDeviceInit_t offline_init = {
+            .name = "test", // 不要超过32字节
+            .timeout_ms = 100, //检测时间
+            .level = OFFLINE_LEVEL_HIGH, //检测等级
+            .beep_times = 3, //beep次数
+            .enable = OFFLINE_ENABLE, //是否开启离线检测
+    };
+    offline_index = OFFLINE_DEVICE_REGISTER(&offline_init);
     while (1)
     {
-      beep_ctrl_times();
+      
       tx_thread_sleep(10);
     }
 }

@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 10:36:35
+ * @LastEditTime: 2025-08-06 11:23:51
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -64,15 +64,20 @@
     #define SYSTEMWATCH_THREAD_STACK_SIZE 1024  //线程栈大小
     #define SYSTEMWATCH_THREAD_PRIORITY 2       //线程优先级 
 #endif  
+//offline配置宏定义
+#define OFFLINE_Enable 1               // 开启离线检测功能
+#define MAX_OFFLINE_DEVICES    12         // 最大离线设备数量，这里根据需要自己修改 
+#if OFFLINE_Enable
+    #define OFFLINE_THREAD_STACK_SIZE 1024     // 离线检测线程栈大小
+    #define OFFLINE_THREAD_PRIORITY 3          // 离线检测线程优先级
+    #define OFFLINE_Beep_Enable 1              // 开启离线蜂鸣器功能
+#endif
 //beep配置宏定义
-// 蜂鸣器配置参数
 #define BEEP_PERIOD   2000  // 注意这里的周期，由于在offline task(10ms)中,尽量保证整除
 #define BEEP_ON_TIME  100   // BEEP_ON_TIME BEEP_OFF_TIME 共同影响在周期内的最大beep times
 #define BEEP_OFF_TIME 100
-
 #define BEEP_TUNE_VALUE 500  // 决定beep的音调
 #define BEEP_CTRL_VALUE 100  // 决定beep的音量
-
 #if !defined(OFFLINE_Beep_Enable)
 #define OFFLINE_Beep_Enable 1
 #endif

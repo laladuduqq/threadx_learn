@@ -9,6 +9,7 @@ add_library(modules STATIC
         BMI088/BMI088.c
         systemwatch/systemwatch.c
         BEEP/beep.c
+        OFFLINE/offline.c
 )
 
 # 设置包含目录
@@ -19,6 +20,7 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/BMI088
         ${CMAKE_CURRENT_SOURCE_DIR}/systemwatch
         ${CMAKE_CURRENT_SOURCE_DIR}/BEEP
+        ${CMAKE_CURRENT_SOURCE_DIR}/OFFLINE
 )
 
 # 链接必要的库
