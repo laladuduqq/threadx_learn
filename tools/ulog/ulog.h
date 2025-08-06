@@ -87,13 +87,28 @@ typedef enum {
 // line, or -- if it is commented out -- you can add -DULOG_ENABLED to
 // your compiler switches.
 
-#include "ulog_port.h"
-#if LOG_ENABLE
-  #define ULOG_ENABLED
+#if defined(USE_COMPOENT_CONFIG_H) && USE_COMPOENT_CONFIG_H
+#include "compoent_config.h"
+  #if LOG_ENABLE
+  #define ULOG_ENABLED 1
+  #endif
+#else
+  #define ULOG_ENABLED 1
+#endif // _COMPOENT_CONFIG_H_
+
+
+// 默认TAG定义，如果用户没有定义则使用默认值
+#ifndef LOG_TAG
+#define LOG_TAG "Default"
 #endif
 
-
-
+// 带默认TAG的日志宏定义
+#define ULOG_TAG_TRACE(fmt, ...)    ULOG_TRACE("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
+#define ULOG_TAG_DEBUG(fmt, ...)    ULOG_DEBUG("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
+#define ULOG_TAG_INFO(fmt, ...)     ULOG_INFO("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
+#define ULOG_TAG_WARNING(fmt, ...)  ULOG_WARNING("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
+#define ULOG_TAG_ERROR(fmt, ...)    ULOG_ERROR("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
+#define ULOG_TAG_CRITICAL(fmt, ...) ULOG_CRITICAL("[%s] " fmt, LOG_TAG, ##__VA_ARGS__)
 
 #ifdef ULOG_ENABLED
   #define ULOG_INIT() ulog_init()

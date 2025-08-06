@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 09:43:04
+ * @LastEditTime: 2025-08-06 10:25:07
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -11,8 +11,22 @@
 
 #include <stddef.h>
 
-//bsp组件配置宏定义
+//tools配置宏定义
+//ulog配置宏定义
+#define LOG_ENABLE 1                            //启用日志
+#define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
+#define LOG_SETTING_UART huart6                 //使用的串口
+#define LOG_COLOR_ENABLE 1                      //启用颜色
+#define LOG_ASYNC_ENABLE 0                      //启用异步日志
+#if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
+    #define LOG_BUFFER_SIZE 512                 //日志缓冲区大小
+    #define LOG_THREAD_STACK_SIZE 1024          //日志线程栈大小
+    #define LOG_THREAD_PRIORITY 1               //日志线程优先级    
+    #define LOG_ASYNC_BUF_SIZE 512              //异步日志缓冲区大小
+#endif
 
+
+//bsp组件配置宏定义
 //uart配置宏定义
 #define UART_MAX_INSTANCE_NUM 3        //可用串口数量
 #define UART_RX_DONE_EVENT (0x01 << 0) //接收完成事件
@@ -40,7 +54,6 @@
 
 
 //组件配置宏定义
-
 //systemwatch配置宏定义
 #define SystemWatch_Enable 1       // 开启系统监控功能,注意下述宏定义只有在开启系统监控功能时才会生效
 #if SystemWatch_Enable
@@ -53,16 +66,7 @@
 #endif  
 
 
-//ulog配置宏定义
-#define LOG_ENABLE 1                            //启用日志
-#define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart6                 //使用的串口
-#define LOG_COLOR_ENABLE 1                      //启用颜色
-#define LOG_ASYNC_ENABLE 0                      //启用异步日志
-//注意，下面三个宏定义只有在启用异步日志时才有效
-#define LOG_BUFFER_SIZE 512                     //日志缓冲区大小
-#define LOG_THREAD_STACK_SIZE 1024              //日志线程栈大小
-#define LOG_THREAD_PRIORITY 1                   //日志线程优先级    
+
 
 
 
