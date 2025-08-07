@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 09:51:16
+ * @LastEditTime: 2025-08-07 10:33:27
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -13,6 +13,7 @@
 #include "bsp_adc.h"
 #include "bsp_flash.h"
 #include "bsp_gpio.h"
+#include "dm_imu.h"
 #include "dwt.h"
 #include "imu.h"
 #include "offline.h"
@@ -40,4 +41,5 @@ void modules_init(TX_BYTE_POOL *pool){
     REFEREE_INIT(pool);  // 初始化裁判系统
     remote_init();  // 初始化遥控器
     pubsub_init();  // 初始化发布订阅系统
+    DM_IMU_INIT(pool);  // 初始化达妙IMU
 }

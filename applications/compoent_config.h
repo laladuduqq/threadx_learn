@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 09:03:44
+ * @LastEditTime: 2025-08-07 10:33:45
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -120,8 +120,17 @@
 #define PUBSUB_MAX_TOPIC_NAME_LEN 32            // 最大话题名称长度
 #define PUBSUB_MAX_SUBSCRIBER_NAME_LEN 32       // 最大订阅者名称长度
 #define PUBSUB_QUEUE_SIZE 4                     // 无锁队列大小（必须是2的幂）
-
-
+//dm_imu配置宏定义
+#define DM_IMU_ENABLE 1
+#if DM_IMU_ENABLE
+#define DM_IMU_RX_ID 0x11                      // 达妙IMU的接收
+#define DM_IMU_TX_ID 0x01                      // 达妙IMU的发送
+#define DM_IMU_CAN_BUS hcan2                    // 达妙IMU使用的CAN总线
+#define DM_IMU_OFFLINE_BEEP_TIMES 1             // 达妙IMU离线检测蜂鸣器响次
+#define DM_IMU_OFFLINE_TIMEOUT_MS 100          // 达妙IMU离线检测超时时间（毫秒）
+#define DM_IMU_THREAD_STACK_SIZE 1024           // 达妙IMU线程栈大小
+#define DM_IMU_THREAD_PRIORITY 7                // 达妙IMU线程优先级
+#endif
 
 
 //rtos内存分配函数
