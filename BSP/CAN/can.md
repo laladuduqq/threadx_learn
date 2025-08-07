@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-05 16:04:23
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 17:25:21
+ * @LastEditTime: 2025-08-07 15:01:52
  * @FilePath: /threadx_learn/BSP/CAN/can.md
  * @Description: 
 -->
@@ -16,8 +16,7 @@
 ### 性能特点
 
 1. **线程安全**：使用TX_MUTEX互斥锁保护发送操作，确保多线程环境下的安全访问
-2. **发送优化**：实现带超时和重试机制的发送函数，提高发送成功率
-3. **灵活配置**：支持阻塞和中断两种接收模式
+2. **灵活配置**：支持阻塞和中断两种接收模式
 
 ### can_bus介绍
 
@@ -143,7 +142,6 @@ void user_can_callback(const CAN_HandleTypeDef* hcan, const uint32_t rx_id) {
 1. **回调函数**：回调函数在中断上下文中执行，严禁有任何延时处理（如HAL_Delay、tx_thread_sleep等）
 2. **线程安全**：发送函数具有互斥锁保护，可以在多线程环境中安全使用
 3. **ID冲突检测**：系统会自动检测接收ID冲突，避免设备间干扰
-4. **发送重试**：发送函数内置重试机制，提高发送成功率
-5. **数据长度**：CAN数据长度限制为1-8字节
-6. **设备数量**：每条CAN总线最多支持MAX_CAN_DEVICES_PER_BUS个设备
-7. **FIFO分配**：根据发送ID的奇偶性自动分配到不同的接收FIFO
+4. **数据长度**：CAN数据长度限制为1-8字节
+5. **设备数量**：每条CAN总线最多支持MAX_CAN_DEVICES_PER_BUS个设备
+6. **FIFO分配**：根据发送ID的奇偶性自动分配到不同的接收FIFO

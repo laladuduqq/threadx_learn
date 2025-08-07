@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 14:12:34
+ * @LastEditTime: 2025-08-07 14:35:52
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -39,9 +39,9 @@ void modules_init(TX_BYTE_POOL *pool){
     SYSTEMWATCH_INIT(pool);  // 初始化系统监控
     OFFLINE_INIT(pool);  // 初始化离线检测模块
     INS_TASK_init(pool);  // 初始化imu
-    REFEREE_INIT(pool);  // 初始化裁判系统
-    remote_init();  // 初始化遥控器
+    //REFEREE_INIT(pool);  // 初始化裁判系统
+    //remote_init();  // 初始化遥控器
     pubsub_init();  // 初始化发布订阅系统
     board_com_init();   // 板间通讯初始化
-    //DM_IMU_INIT(pool);  // 初始化达妙IMU
+    DM_IMU_INIT(pool);  // 初始化达妙IMU
 }

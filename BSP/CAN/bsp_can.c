@@ -3,6 +3,7 @@
 #include <string.h>
 #include "can.h"
 #include "stm32f4xx_hal_def.h"
+#include "tx_api.h"
 
 #define LOG_TAG "bsp_can"
 #include "ulog.h"
@@ -161,35 +162,22 @@ uint8_t CAN_SendMessage(Can_Device *device, uint8_t len) {
     if (tx_mutex_get(&can_bus[bus_index].tx_mutex, TX_WAIT_FOREVER) != TX_SUCCESS) {
         return HAL_ERROR;
     }
-
-    uint32_t start_time;
-    uint32_t timeout_cycles = CAN_SEND_TIMEOUT_US * 168; // 168MHz下的周期数
-    uint8_t retry_cnt = CAN_SEND_RETRY_CNT;
     HAL_StatusTypeDef status = HAL_ERROR;
 
-    while (retry_cnt--) {
-        start_time = DWT->CYCCNT;
-        // 快速检查邮箱
-        if (HAL_CAN_GetTxMailboxesFreeLevel(device->can_handle) > 0) {
-            device->txconf.DLC = len;
-            status = HAL_CAN_AddTxMessage(device->can_handle, 
-                                          &device->txconf,
-                                          device->tx_buff,
-                                          &device->tx_mailbox);
-            if (status == HAL_OK) {
-                // 释放互斥锁
-                tx_mutex_put(&can_bus[bus_index].tx_mutex);
-                return HAL_OK;
-            }
+    // 快速检查邮箱
+    if (HAL_CAN_GetTxMailboxesFreeLevel(device->can_handle) > 0) {
+        device->txconf.DLC = len;
+        status = HAL_CAN_AddTxMessage(device->can_handle, &device->txconf,
+                                          device->tx_buff,&device->tx_mailbox);
+        if (status == HAL_OK) {
+            // 释放互斥锁
+            tx_mutex_put(&can_bus[bus_index].tx_mutex);
+            return HAL_OK;
         }
-        // 短时等待
-        while ((DWT->CYCCNT - start_time) < timeout_cycles);
     }
-    
     // 释放互斥锁
     tx_mutex_put(&can_bus[bus_index].tx_mutex);
-    return HAL_TIMEOUT;
-
+    return HAL_ERROR;
 }
 
 uint8_t CAN_SendMessage_hcan(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *pHeader,
@@ -211,32 +199,21 @@ uint8_t CAN_SendMessage_hcan(CAN_HandleTypeDef *hcan, CAN_TxHeaderTypeDef *pHead
     if (tx_mutex_get(&can_bus[bus_index].tx_mutex, TX_WAIT_FOREVER) != TX_SUCCESS) {
         return HAL_ERROR;
     }
-    
-    uint32_t start_time;
-    uint32_t timeout_cycles = CAN_SEND_TIMEOUT_US * 168; // 168MHz下的周期数
-    uint8_t retry_cnt = CAN_SEND_RETRY_CNT;
-    HAL_StatusTypeDef status = HAL_ERROR;
 
-    while (retry_cnt--) {
-        start_time = DWT->CYCCNT;
-        // 快速检查邮箱
-        if (HAL_CAN_GetTxMailboxesFreeLevel(hcan) > 0) {
-            pHeader->DLC = len;
-            status = HAL_CAN_AddTxMessage(hcan, pHeader, aData, pTxMailbox);
-            if (status == HAL_OK) {
-                // 释放互斥锁
-                tx_mutex_put(&can_bus[bus_index].tx_mutex);
-                return HAL_OK;
-            }
+    HAL_StatusTypeDef status = HAL_ERROR;
+    // 快速检查邮箱
+    if (HAL_CAN_GetTxMailboxesFreeLevel(hcan) > 0) {
+        pHeader->DLC = len;
+        status = HAL_CAN_AddTxMessage(hcan, pHeader, aData, pTxMailbox);
+        if (status == HAL_OK) {
+            // 释放互斥锁
+            tx_mutex_put(&can_bus[bus_index].tx_mutex);
+            return HAL_OK;
         }
-        
-        // 短时等待
-        while ((DWT->CYCCNT - start_time) < timeout_cycles);
     }
-    
     // 释放互斥锁
     tx_mutex_put(&can_bus[bus_index].tx_mutex);
-    return HAL_TIMEOUT;
+    return HAL_ERROR;
 }
 
 void BSP_CAN_Device_DeInit(Can_Device *dev) {

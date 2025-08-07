@@ -209,7 +209,7 @@ void DM_IMU_Init(TX_BYTE_POOL *pool)
     DM_IMU.YawTotalAngle = &(dm_imu.YawTotalAngle);  
     DM_IMU.gyro = (const float (*)[3])&(dm_imu.gyro); 
 
-    // 用内存池分配监控线程栈
+    // 用内存池分配线程栈
     CHAR *dmimu_thread_stack;
 
     dmimu_thread_stack = threadx_malloc(DM_IMU_THREAD_STACK_SIZE);
@@ -222,7 +222,7 @@ void DM_IMU_Init(TX_BYTE_POOL *pool)
                 DM_IMU_THREAD_STACK_SIZE, DM_IMU_THREAD_PRIORITY, DM_IMU_THREAD_PRIORITY, TX_NO_TIME_SLICE, TX_AUTO_START);
 
     if(status != TX_SUCCESS) {
-        ULOG_TAG_ERROR("Failed to create ins task!");
+        ULOG_TAG_ERROR("Failed to create dmimu task! Status: %d", status);
         return;
     }
     ULOG_TAG_INFO("DMimuTask created");

@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 14:01:10
+ * @LastEditTime: 2025-08-07 14:59:52
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -15,7 +15,7 @@
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
 #define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart6                 //使用的串口
+#define LOG_SETTING_UART huart1                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
 #if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
@@ -55,7 +55,7 @@
 
 //组件配置宏定义
 //systemwatch配置宏定义
-#define SystemWatch_Enable 1       // 开启系统监控功能,注意下述宏定义只有在开启系统监控功能时才会生效
+#define SystemWatch_Enable 0       // 开启系统监控功能,注意下述宏定义只有在开启系统监控功能时才会生效
 #if SystemWatch_Enable
     #define MAX_MONITORED_TASKS 10              // 最大监控任务数
     #define TASK_BLOCK_TIMEOUT 1                // 任务阻塞判定时间 (s)
