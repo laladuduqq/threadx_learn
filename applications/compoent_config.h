@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 23:39:04
+ * @LastEditTime: 2025-08-07 09:03:44
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -15,7 +15,7 @@
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
 #define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart1                 //使用的串口
+#define LOG_SETTING_UART huart6                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
 #if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
@@ -113,7 +113,13 @@
 //board_com配置宏定义
 #define GIMBAL_ID 0X310
 #define CHASSIS_ID 0X311
-
+//SubPub配置宏定义
+#define PUBSUB_MAX_TOPICS 16                    // 最大话题数量
+#define PUBSUB_MAX_SUBSCRIBERS_PER_TOPIC 1      // 每个话题最大订阅者数量（针对1对1优化），这里只能为1个订阅者
+#define PUBSUB_MAX_DATA_SIZE 64                 // 最大数据大小
+#define PUBSUB_MAX_TOPIC_NAME_LEN 32            // 最大话题名称长度
+#define PUBSUB_MAX_SUBSCRIBER_NAME_LEN 32       // 最大订阅者名称长度
+#define PUBSUB_QUEUE_SIZE 4                     // 无锁队列大小（必须是2的幂）
 
 
 

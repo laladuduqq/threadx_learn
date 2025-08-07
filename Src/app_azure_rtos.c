@@ -25,7 +25,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "board_com.h"
 #include "robot_init.h"
 #include "tx_api.h"
 #include "ulog.h"
@@ -115,23 +114,6 @@ void init_Task(ULONG thread_input)
     // 恢复中断状态
     tx_interrupt_control(old_posture);
     ULOG_TAG_INFO("robot init success");
-    // 初始化配置
-    board_com_init_t board_com_config = {
-        .offline_manage_init = {
-                          .name = "board_com",
-                          .timeout_ms = 100,
-                          .level = OFFLINE_LEVEL_HIGH,
-                          .beep_times = 8,
-                          .enable = OFFLINE_ENABLE,
-                        },
-        .Can_Device_Init_Config = {
-                            .can_handle = &hcan2,
-                            .tx_id = GIMBAL_ID,
-                            .rx_id = CHASSIS_ID,
-                        }
-    };
-    // 初始化板间通讯
-    board_com_t *board_com = BOARD_COM_INIT(&board_com_config);
     while (1)
     {
       

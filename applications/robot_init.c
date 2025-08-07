@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 16:10:10
+ * @LastEditTime: 2025-08-07 09:51:16
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -18,6 +18,7 @@
 #include "offline.h"
 #include "referee.h"
 #include "remote.h"
+#include "subpub.h"
 #include "systemwatch.h"
 #include "ulog_port.h"
 
@@ -38,4 +39,5 @@ void modules_init(TX_BYTE_POOL *pool){
     INS_TASK_init(pool);  // 初始化imu
     REFEREE_INIT(pool);  // 初始化裁判系统
     remote_init();  // 初始化遥控器
+    pubsub_init();  // 初始化发布订阅系统
 }
