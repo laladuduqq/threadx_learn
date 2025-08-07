@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 10:33:45
+ * @LastEditTime: 2025-08-07 14:01:10
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -70,7 +70,7 @@
 #if OFFLINE_Enable
     #define OFFLINE_THREAD_STACK_SIZE 1024     // 离线检测线程栈大小
     #define OFFLINE_THREAD_PRIORITY 3          // 离线检测线程优先级
-    #define OFFLINE_Beep_Enable 1              // 开启离线蜂鸣器功能
+    #define OFFLINE_Beep_Enable 0              // 开启离线蜂鸣器功能
 #endif
 //beep配置宏定义
 #define BEEP_PERIOD   2000  // 注意这里的周期，由于在offline task(10ms)中,尽量保证整除
@@ -111,6 +111,9 @@
 //vt03
 #define VT03_DEAD_ZONE 5 // 定义遥控器死区范围
 //board_com配置宏定义
+#define BOARD_COM_OFFLINE_MS 100               // 板间通讯离线检测超时时间（毫秒）
+#define BOARD_COM_OFFLINE_BEEP_TIMES 8          // 板间通讯离线检测蜂鸣器响次
+#define BOARD_COM_CAN_BUS hcan2                 // 板间通讯使用的CAN总线
 #define GIMBAL_ID 0X310
 #define CHASSIS_ID 0X311
 //SubPub配置宏定义

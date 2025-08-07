@@ -29,6 +29,12 @@ Board Communication 模块是一个用于在多个电路板之间进行通信的
 - 单板模式下返回 NULL
 - 多板模式下调用 [board_com_get_data](file:///home/pan/code/threadx_learn/modules/board_com/board_com.h#L78-L78) 函数
 
+### BOARD_COM_GET
+
+- 单版模式下返回NULL
+
+- 多板模式下返回baord_com指针地址 
+
 ## 数据结构
 
 ### board_com_t
@@ -76,23 +82,10 @@ Board Communication 模块是一个用于在多个电路板之间进行通信的
 
 ```c
 // 初始化配置
-board_com_init_t board_com_config = {
-    .offline_manage_init = {
-        .name = "board_com",
-        .timeout_ms = 100,
-        .level = OFFLINE_LEVEL_HIGH,
-        .beep_times = 8,
-        .enable = OFFLINE_ENABLE,
-    },
-    .Can_Device_Init_Config = {
-        .can_handle = &hcan2,
-        .tx_id = GIMBAL_ID,
-        .rx_id = CHASSIS_ID,
-    }
-};
+BOARD_COM_INIT();
 
-// 初始化板间通信
-board_com_t *board_com = BOARD_COM_INIT(&board_com_config);
+// 获取板间通信结构体
+board_com_t *board_com = BOARD_COM_GET();
 
 // 发送数据
 Chassis_Ctrl_Cmd_s ctrl_cmd = {0};

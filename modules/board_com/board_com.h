@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 21:35:41
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-06 23:47:06
+ * @LastEditTime: 2025-08-07 14:03:56
  * @FilePath: /threadx_learn/modules/board_com/board_com.h
  * @Description: 
  */
@@ -31,13 +31,15 @@
 #endif // _COMPOENT_CONFIG_H_
 
 #ifndef ONE_BOARD
-#define BOARD_COM_INIT(config) board_com_init(config)
+#define BOARD_COM_INIT() board_com_init()
 #define BOARD_COM_SEND(data) board_com_send(data);
 #define BOARD_COM_GET_DATA() board_com_get_data()
+#define BOARD_COM_GET() get_board_com()
 #else
-#define BOARD_COM_INIT(config) NULL
+#define BOARD_COM_INIT() do{} while(0);
 #define BOARD_COM_SEND(data) do{} while(0);
 #define BOARD_COM_GET_DATA() NULL
+#define BOARD_COM_GET() NULL
 #endif
 
 
@@ -60,11 +62,15 @@ typedef struct
 } board_com_init_t;
 
 /**
- * @description: 板件通讯初始化
- * @param {board_com_init_t*} board_com_init
- * @return *board_com_t
+ * @description: 完成板间通初始化
+ * @return {*}
  */
-board_com_t *board_com_init(board_com_init_t* board_com_init);
+void board_com_init();
+/**
+ * @description: 获取板间通讯结构体指针
+ * @return {board_com_t*} 板间通讯结构体指针
+ */
+board_com_t *get_board_com();
 /**
  * @description: 板件通讯发送函数
  * @param {uint8_t} *data

@@ -1,4 +1,5 @@
 #include "board_com.h"
+#include "compoent_config.h"
 #include "offline.h"
 #include "robotdef.h"
 #include "stm32f4xx_hal_def.h"
@@ -13,34 +14,43 @@
 static board_com_t board_com;
 static void board_recv(const CAN_HandleTypeDef* hcan, const uint32_t rx_id);
 
-board_com_t *board_com_init(board_com_init_t* board_com_init)
+void board_com_init()
 {
-    // 参数检查
-    if (board_com_init == NULL) {
-        ULOG_TAG_ERROR("board_com_init: NULL pointer");
-        return NULL;
-    }
-    
-    // 初始化板间通讯的掉线检测
-    board_com.offlinemanage_index = offline_device_register(&board_com_init->offline_manage_init);
-
-    // CAN 设备初始化配置
-    Can_Device_Init_Config_s can_config = {
-        .can_handle = board_com_init->Can_Device_Init_Config.can_handle,
-        .tx_id = board_com_init->Can_Device_Init_Config.tx_id,
-        .rx_id = board_com_init->Can_Device_Init_Config.rx_id,
-        .tx_mode = CAN_MODE_BLOCKING,
-        .rx_mode = CAN_MODE_IT,
-        .can_callback = board_recv
+    static board_com_init_t board_com_config = {
+        .offline_manage_init = {
+            .name = "board_com",
+            .timeout_ms = BOARD_COM_OFFLINE_MS,
+            .level = OFFLINE_LEVEL_HIGH,
+            .beep_times = BOARD_COM_OFFLINE_BEEP_TIMES,
+            .enable = OFFLINE_ENABLE,
+        },
+        .Can_Device_Init_Config = {
+            .can_handle = &BOARD_COM_CAN_BUS,
+            #if defined (GIMBAL_BOARD)
+            .tx_id = GIMBAL_ID,
+            .rx_id = CHASSIS_ID,
+            #elif defined (CHASSIS_BOARD)
+            .tx_id = CHASSIS_ID,
+            .rx_id = GIMBAL_ID,
+            #endif
+            .tx_mode = CAN_MODE_BLOCKING,
+            .rx_mode = CAN_MODE_IT,
+            .can_callback = board_recv
+        }
     };
     
-    Can_Device *can_dev = BSP_CAN_Device_Init(&can_config);
+    // 初始化板间通讯的掉线检测
+    board_com.offlinemanage_index = offline_device_register(&board_com_config.offline_manage_init);
+
+    // CAN 设备初始化配置
+    Can_Device *can_dev = BSP_CAN_Device_Init(&board_com_config.Can_Device_Init_Config);
     if (can_dev == NULL) {
         ULOG_TAG_ERROR("Failed to initialize CAN device for board_com");
-        return NULL;
     }
     board_com.candevice = can_dev;
-    
+}
+
+board_com_t *get_board_com(){
     return &board_com;
 }
 
