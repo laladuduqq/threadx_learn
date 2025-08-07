@@ -8,9 +8,6 @@ static uint32_t CYCCNT_LAST;
 static uint64_t CYCCNT64;
 
 /**
- * @brief 私有函数,用于检查DWT CYCCNT寄存器是否溢出,并更新CYCCNT_RountCount
- * @attention 此函数假设两次调用之间的时间间隔不超过一次溢出
- */
 static void DWT_CNT_Update(void)
 {
     volatile uint32_t cnt_now = DWT->CYCCNT;
@@ -18,6 +15,39 @@ static void DWT_CNT_Update(void)
         CYCCNT_RountCount++;
 
     CYCCNT_LAST = cnt_now;
+}
+void DWT_SysTimeUpdate(void)
+{
+    volatile uint32_t cnt_now = DWT->CYCCNT;
+
+    DWT_CNT_Update();
+
+    CYCCNT64 = (uint64_t)CYCCNT_RountCount * (uint64_t)UINT32_MAX + (uint64_t)cnt_now;
+    SysTime.s = CYCCNT64 / CPU_FREQ_Hz;
+    uint64_t remainder = CYCCNT64 % CPU_FREQ_Hz;
+    SysTime.ms = remainder / CPU_FREQ_Hz_ms;
+    SysTime.us = (remainder % CPU_FREQ_Hz_ms) / CPU_FREQ_Hz_us;
+}
+
+*/
+
+/**
+ * @brief 私有函数,用于检查DWT CYCCNT寄存器是否溢出,并更新CYCCNT_RountCount
+ * @attention 此函数假设两次调用之间的时间间隔不超过一次溢出
+ */
+static void DWT_CNT_Update(void)
+{
+    static volatile uint8_t bit_locker = 0;
+    if (!bit_locker)
+    {
+        bit_locker = 1;
+        volatile uint32_t cnt_now = DWT->CYCCNT;
+        if (cnt_now < CYCCNT_LAST)
+            CYCCNT_RountCount++;
+
+        CYCCNT_LAST = DWT->CYCCNT;
+        bit_locker = 0;
+    }
 }
 
 void DWT_Init(uint32_t CPU_Freq_mHz)
@@ -64,14 +94,17 @@ double DWT_GetDeltaT64(uint32_t *cnt_last)
 void DWT_SysTimeUpdate(void)
 {
     volatile uint32_t cnt_now = DWT->CYCCNT;
+    static uint64_t CNT_TEMP1, CNT_TEMP2, CNT_TEMP3;
 
     DWT_CNT_Update();
 
     CYCCNT64 = (uint64_t)CYCCNT_RountCount * (uint64_t)UINT32_MAX + (uint64_t)cnt_now;
-    SysTime.s = CYCCNT64 / CPU_FREQ_Hz;
-    uint64_t remainder = CYCCNT64 % CPU_FREQ_Hz;
-    SysTime.ms = remainder / CPU_FREQ_Hz_ms;
-    SysTime.us = (remainder % CPU_FREQ_Hz_ms) / CPU_FREQ_Hz_us;
+    CNT_TEMP1 = CYCCNT64 / CPU_FREQ_Hz;
+    CNT_TEMP2 = CYCCNT64 - CNT_TEMP1 * CPU_FREQ_Hz;
+    SysTime.s = CNT_TEMP1;
+    SysTime.ms = CNT_TEMP2 / CPU_FREQ_Hz_ms;
+    CNT_TEMP3 = CNT_TEMP2 - SysTime.ms * CPU_FREQ_Hz_ms;
+    SysTime.us = CNT_TEMP3 / CPU_FREQ_Hz_us;
 }
 
 // 内联函数

@@ -51,17 +51,16 @@ static void SystemWatch_Task(ULONG thread_input)
         HAL_IWDG_Refresh(&hiwdg);
         taskList[0].dt = DWT_GetDeltaT(&taskList[0].dt_cnt); //自身更新
         taskList[0].last_report_time = DWT_GetTimeline_s();
-        float now = DWT_GetTimeline_s();
         for(uint8_t i = 0; i < taskCount; i++) {
             if(taskList[i].isActive) {
-                float dt_since_last_report = now - taskList[i].last_report_time;
+                float dt_since_last_report = DWT_GetTimeline_s() - taskList[i].last_report_time;
                 // 检查任务执行间隔是否过长
                 if(dt_since_last_report > TASK_BLOCK_TIMEOUT) {
                     // ThreadX临界区
                     UINT old_posture = tx_interrupt_control(TX_INT_DISABLE);
                     
                     ULOG_TAG_ERROR("**** Task Blocked Detected! System State Dump ****");
-                    ULOG_TAG_ERROR("Time: %.3f s", DWT_GetTimeline_s());
+                    ULOG_TAG_ERROR("dt_since_last_report_time: %.3f s", dt_since_last_report);
                     ULOG_TAG_ERROR("----------------------------------------");
                     ULOG_TAG_ERROR("Blocked Task Information:");
                     // 打印被阻塞任务信息
@@ -80,10 +79,16 @@ static void SystemWatch_Task(ULONG thread_input)
                     #endif
 
                     // 从监控列表中移除任务
+                    // 先清空当前位置的数据
+                    memset(&taskList[i], 0, sizeof(TaskMonitor_t));
+                    
                     // 将后续任务前移
                     for (uint8_t j = i; j < taskCount - 1; j++) {
                         taskList[j] = taskList[j + 1];
                     }
+                    
+                    // 清除最后一个位置的数据
+                    memset(&taskList[taskCount - 1], 0, sizeof(TaskMonitor_t));
                     taskCount--;
                     i--; // 调整索引，因为后面的元素已经前移
 
