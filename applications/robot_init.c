@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 17:47:38
+ * @LastEditTime: 2025-08-08 17:59:58
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -14,6 +14,7 @@
 #include "bsp_adc.h"
 #include "bsp_flash.h"
 #include "bsp_gpio.h"
+#include "chassiscmd.h"
 #include "dm_imu.h"
 #include "dwt.h"
 #include "gimbalcmd.h"
@@ -65,7 +66,7 @@ void applications_init(TX_BYTE_POOL *pool){
     robot_control_task_init(pool);
     #ifndef ONE_BOARD
         #if defined (CHASSIS_BOARD)
-        
+        chassis_task_init(pool);
         #elif defined (GIMBAL_BOARD)
         gimbal_task_init(pool);
         shoot_task_init(pool);

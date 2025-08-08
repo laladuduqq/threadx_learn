@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 17:42:09
+ * @LastEditTime: 2025-08-08 17:58:08
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -166,6 +166,9 @@
 //shoot配置宏定义
 #define SHOOT_THREAD_STACK_SIZE 1024 // 发射线程栈大小
 #define SHOOT_THREAD_PRIORITY 10      // 发射线程优先级
+//chassis配置宏定义
+#define CHASSIS_THREAD_STACK_SIZE 1024 // 底盘线程栈大小
+#define CHASSIS_THREAD_PRIORITY 9      // 底盘线程优先级
 
 //rtos内存分配函数
 void* threadx_malloc(size_t size);
