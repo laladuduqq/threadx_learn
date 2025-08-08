@@ -160,7 +160,7 @@ void init_Task(ULONG thread_input)
     chassis_motor_config.controller_setting_init_config.motor_reverse_flag = MOTOR_DIRECTION_NORMAL;
     chassis_motor_config.offline_device_motor.name = "m3508_1";
     chassis_motor_config.offline_device_motor.beep_times = 1;
-    motor_lf = DJIMotorInit(&chassis_motor_config);
+    motor_lf = DJI_MOTOR_INIT(&chassis_motor_config);
     
     BSP_GPIO_EXTI_Register_Callback(GPIO_PIN_0,key_callback);
     while (1)

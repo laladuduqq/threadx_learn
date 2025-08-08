@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-07 16:57:18
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 13:07:10
+ * @LastEditTime: 2025-08-08 13:30:32
  * @FilePath: /threadx_learn/modules/MOTOR/DJI/dji.h
  * @Description: 
  */
@@ -43,9 +43,9 @@ extern "C"{
 #define DJI_MOTOR_SET_REF(MOTOR,REF) do{} while(0);
 #define DJI_MOTOR_CHANGE_FEED(MOTOR,LOOP,TYPE) do{} while(0);
 #define DJI_MOTOR_CONTROL() do{} while(0);
-#define DJI_MOTOR_STOP() do{} while(0);
-#define DJI_MOTOR_ENABLE() do{} while(0);
-#define DJI_MOTOR_OUTER_LOOP() do{} while(0);
+#define DJI_MOTOR_STOP(MOTOR) do{} while(0);
+#define DJI_MOTOR_ENABLE(MOTOR) do{} while(0);
+#define DJI_MOTOR_OUTER_LOOP(MOTOR,OUTLOOP,LQR_CONFIG) do{} while(0);
 #endif
 
 

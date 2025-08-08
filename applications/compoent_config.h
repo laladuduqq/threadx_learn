@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 13:14:58
+ * @LastEditTime: 2025-08-08 13:32:35
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
