@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 13:32:35
+ * @LastEditTime: 2025-08-08 14:15:40
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -148,6 +148,9 @@
     #define ECD_ANGLE_COEF_DJI 0.043945f // (360/8192),将编码器值转化为角度制
 #endif
 #define USE_DAMIAO_MOTOR        // 启用达妙电机
+#if defined (USE_DAMIAO_MOTOR) 
+    #define DM_MOTOR_CNT	4               //达妙电机数量
+#endif
 // #define USE_HAITAI_MOTOR     // 启用海泰电机
 // #define USE_SITAIWEI_MOTOR   // 启用斯泰威电机
 

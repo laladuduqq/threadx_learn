@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-07 16:57:18
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 13:30:32
+ * @LastEditTime: 2025-08-08 13:50:40
  * @FilePath: /threadx_learn/modules/MOTOR/DJI/dji.h
  * @Description: 
  */
@@ -63,7 +63,6 @@ typedef struct
 
     float total_angle;   // 总角度,注意方向
     int32_t total_round; // 总圈数,注意方向
-    float total_output_round; //输出轴总圈数
 } DJI_Motor_Measure_s;
 
 /**
@@ -84,13 +83,51 @@ typedef struct
     Can_Device *can_device; // CAN设备
 } DJIMotor_t;
 
-
+/**
+ * @description: DJI电机初始化
+ * @param {Motor_Init_Config_s} *config
+ * @return {DJIMotor_t} *motor,返回电机指针
+ */
 DJIMotor_t *DJIMotorInit(Motor_Init_Config_s *config);
+ /**
+  * @description: DJI电机设置参考值
+  * @param {DJIMotor_t} *motor
+  * @return {*}
+  */
 void DJIMotorSetRef(DJIMotor_t *motor, float ref);
+/**
+ * @description: DJI电机修改对应闭环的反馈数据源
+ * @param {DJIMotor_t} *motor，电机指针
+ * @param {Closeloop_Type_e} loop，对应的闭环类型
+ * @param {Feedback_Source_e} type，修改的反馈数据源
+ * @return {*}
+ */
 void DJIMotorChangeFeed(DJIMotor_t *motor, Closeloop_Type_e loop, Feedback_Source_e type);
+/**
+ * @description: DJI电机控制
+ * @param {*}
+ * @return {*}
+ */
 void DJIMotorControl(void);
+/**
+ * @description: DJI电机停止
+ * @param {DJIMotor_t} *motor，电机指针
+ * @return {*}
+ */
 void DJIMotorStop(DJIMotor_t *motor);
+/**
+ * @description: DJI电机使能
+ * @param {DJIMotor_t} *motor，电机指针
+ * @return {*}
+ */
 void DJIMotorEnable(DJIMotor_t *motor);
+/**
+ * @description: DJI电机外环修改
+ * @param {DJIMotor_t} *motor，电机指针
+ * @param {Closeloop_Type_e} outer_loop，外环类型
+ * @param {LQR_Init_Config_s} *lqr_config，LQR参数,如果不是lqr算法直接传入NULL即可
+ * @return {*}
+ */
 void DJIMotorOuterLoop(DJIMotor_t *motor, Closeloop_Type_e outer_loop, LQR_Init_Config_s *lqr_config);
 
 

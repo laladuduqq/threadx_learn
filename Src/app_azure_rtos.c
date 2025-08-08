@@ -25,11 +25,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "bsp_gpio.h"
-#include "dji.h"
-#include "motor_def.h"
+#include "damiao.h"
+#include "dm_imu.h"
+#include "imu.h"
 #include "robot_init.h"
-#include "stm32f4xx_hal_gpio.h"
 #include "tx_api.h"
 #include "tx_port.h"
 #include "ulog.h"
@@ -41,9 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-static DJIMotor_t *motor_lf; // left right forward back
-static CHAR key_flag =0;
-void key_callback(GPIO_EXTI_Event_Type event);
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -59,7 +56,8 @@ static UCHAR tx_byte_pool_buffer[TX_APP_MEM_POOL_SIZE];
 TX_BYTE_POOL tx_app_byte_pool;
 
 /* USER CODE BEGIN PV */
-
+DMMOTOR_t *pitch_motor = NULL; 
+const static IMU_DATA_T* imu;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -121,72 +119,63 @@ void init_Task(ULONG thread_input)
     // 恢复中断状态
     tx_interrupt_control(old_posture);
     ULOG_TAG_INFO("robot init success");
-    Motor_Init_Config_s chassis_motor_config = {
+    imu = INS_GetData();
+    Motor_Init_Config_s pitch_config = {
         .offline_device_motor ={
-          .timeout_ms = 100,                              // 超时时间
-          .level = OFFLINE_LEVEL_HIGH,                     // 离线等级
-          .enable = OFFLINE_ENABLE,                       // 是否启用离线管理
-        },
+              .name = "DM4310",                        // 设备名称
+              .timeout_ms = 100,                              // 超时时间
+              .level = OFFLINE_LEVEL_HIGH,                     // 离线等级
+              .beep_times = 2,                                // 蜂鸣次数
+              .enable = OFFLINE_ENABLE,                       // 是否启用离线管理
+            },
         .can_init_config = {
-            .can_handle = &hcan1,
-        },
+                .can_handle = &hcan2,
+                .tx_id = 0X23,
+                .rx_id = 0X206,
+            },
         .controller_param_init_config = {
-            .lqr_config ={
-                .K ={0.05f}, 
-                .output_max = 6.0f,
-                .output_min =-6.0f,
-                .state_dim = 1,
-            }
+            .angle_PID = {
+                .Kp = 0.01, // 8
+                .Ki = 0,
+                .Kd = 0,
+                .DeadBand = 0.1,
+                .Improve = PID_Trapezoid_Intergral | PID_Integral_Limit,
+                .IntegralLimit = 0,
+                .MaxOut = 100,
+            },
+            .speed_PID = {
+                .Kp = 0.3,  // 50
+                .Ki = 0, // 200
+                .Kd = 0,
+                .Improve = PID_Trapezoid_Intergral | PID_Integral_Limit,
+                .IntegralLimit = 100,
+                .MaxOut = 0.2,
+            },
+                .other_angle_feedback_ptr = imu->Pitch,
+                .other_speed_feedback_ptr = &((*imu->gyro)[0]),
         },
         .controller_setting_init_config = {
             .angle_feedback_source = MOTOR_FEED,
             .speed_feedback_source = MOTOR_FEED,
-            .outer_loop_type    = SPEED_LOOP,
-            .close_loop_type    = SPEED_LOOP,
-            .feedback_reverse_flag =FEEDBACK_DIRECTION_NORMAL,
-            .control_algorithm =CONTROL_LQR,
-            .PowerControlState =PowerControlState_ON,
+            .outer_loop_type = ANGLE_LOOP,
+            .close_loop_type = ANGLE_LOOP | SPEED_LOOP,
+            .motor_reverse_flag = MOTOR_DIRECTION_NORMAL,
         },
         .Motor_init_Info ={
-              .motor_type = M3508,
-              .max_current = 10.0f,
-              .gear_ratio = 19,
-              .max_torque = 6.0f,
-              .max_speed = 482,
-              .torque_constant = 0.0156f
+              .motor_type = DM4310,
+              .max_current = 7.5f,
+              .gear_ratio = 10,
+              .max_torque = 7,
+              .max_speed = 200,
+              .torque_constant = 0.093f
             }
+
     };
-    chassis_motor_config.can_init_config.tx_id = 4;
-    chassis_motor_config.controller_setting_init_config.motor_reverse_flag = MOTOR_DIRECTION_NORMAL;
-    chassis_motor_config.offline_device_motor.name = "m3508_1";
-    chassis_motor_config.offline_device_motor.beep_times = 1;
-    motor_lf = DJI_MOTOR_INIT(&chassis_motor_config);
-    
-    BSP_GPIO_EXTI_Register_Callback(GPIO_PIN_0,key_callback);
+    pitch_motor = DM_MOTOR_INIT(&pitch_config,MIT_MODE);
     while (1)
     {
       
       tx_thread_sleep(10);
-    }
-}
-
-void key_callback(GPIO_EXTI_Event_Type event) {
-    if (key_flag==0)
-    {
-      DJI_MOTOR_ENABLE(motor_lf);
-      DJI_MOTOR_SET_REF(motor_lf, 1000 * 6.0f);
-      key_flag=1;
-    }
-    else if (key_flag==1) {
-      DJI_MOTOR_ENABLE(motor_lf);
-      DJI_MOTOR_SET_REF(motor_lf, 0);
-      key_flag=0;
-    }
-    else
-    {
-      DJI_MOTOR_STOP(motor_lf);
-      DJI_MOTOR_SET_REF(motor_lf, 0);
-      key_flag=0;
     }
 }
 /* USER CODE END  0 */

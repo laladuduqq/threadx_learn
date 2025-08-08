@@ -2,11 +2,12 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-07 16:57:18
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 09:55:42
+ * @LastEditTime: 2025-08-08 14:00:43
  * @FilePath: /threadx_learn/modules/MOTOR/motor_task.c
  * @Description: 
  */
 #include "motor_task.h"
+#include "damiao.h"
 #include "compoent_config.h"
 #include "systemwatch.h"
 #include "tx_api.h"
@@ -24,6 +25,7 @@ void motortask(ULONG thread_input)
     for (;;)
     {
         DJI_MOTOR_CONTROL();
+        DM_MOTOR_CONTROL();
         SYSTEMWATCH_UPDATE_TASK(&motorTask_thread);
         tx_thread_sleep(2);
     }
