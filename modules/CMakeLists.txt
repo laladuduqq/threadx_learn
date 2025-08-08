@@ -23,6 +23,8 @@ add_library(modules STATIC
         board_com/board_com.c
         SubPub/subpub.c
         DM_IMU/dm_imu.c
+        MOTOR/motor_task.c
+        MOTOR/DJI/dji.c
 )
 
 # 设置包含目录
@@ -40,6 +42,8 @@ target_include_directories(modules
         ${CMAKE_CURRENT_SOURCE_DIR}/board_com
         ${CMAKE_CURRENT_SOURCE_DIR}/SubPub
         ${CMAKE_CURRENT_SOURCE_DIR}/DM_IMU
+        ${CMAKE_CURRENT_SOURCE_DIR}/MOTOR
+        ${CMAKE_CURRENT_SOURCE_DIR}/MOTOR/DJI
 )
 
 # 链接必要的库

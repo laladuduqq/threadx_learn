@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 15:10:29
+ * @LastEditTime: 2025-08-08 13:14:58
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -15,7 +15,7 @@
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
 #define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart1                 //使用的串口
+#define LOG_SETTING_UART huart6                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
 #if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
@@ -134,7 +134,22 @@
 #define DM_IMU_THREAD_STACK_SIZE 1024           // 达妙IMU线程栈大小
 #define DM_IMU_THREAD_PRIORITY 7                // 达妙IMU线程优先级
 #endif
-
+//motor配置宏定义
+#define MOTOR_THREAD_STACK_SIZE 1024 // 电机线程栈大小
+#define MOTOR_THREAD_PRIORITY 6       // 电机线程优先级
+// 电机类型选择配置
+// 可以通过注释/取消注释来启用/禁用特定电机类型
+#define USE_DJI_MOTOR           // 启用大疆电机
+#if defined (USE_DJI_MOTOR)
+    #define DJI_MOTOR_CNT 8              //DJI电机数量
+    /* 滤波系数设置为1的时候即关闭滤波 */
+    #define SPEED_SMOOTH_COEF 0.9f      // 最好大于0.85
+    #define CURRENT_SMOOTH_COEF 0.9f     // 必须大于0.9
+    #define ECD_ANGLE_COEF_DJI 0.043945f // (360/8192),将编码器值转化为角度制
+#endif
+#define USE_DAMIAO_MOTOR        // 启用达妙电机
+// #define USE_HAITAI_MOTOR     // 启用海泰电机
+// #define USE_SITAIWEI_MOTOR   // 启用斯泰威电机
 
 //rtos内存分配函数
 void* threadx_malloc(size_t size);

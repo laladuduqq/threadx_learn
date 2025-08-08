@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-07 14:35:52
+ * @LastEditTime: 2025-08-08 13:20:32
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -17,6 +17,7 @@
 #include "dm_imu.h"
 #include "dwt.h"
 #include "imu.h"
+#include "motor_task.h"
 #include "offline.h"
 #include "referee.h"
 #include "remote.h"
@@ -43,5 +44,6 @@ void modules_init(TX_BYTE_POOL *pool){
     //remote_init();  // 初始化遥控器
     pubsub_init();  // 初始化发布订阅系统
     board_com_init();   // 板间通讯初始化
-    DM_IMU_INIT(pool);  // 初始化达妙IMU
+    //DM_IMU_INIT(pool);  // 初始化达妙IMU
+    motor_task_init(pool);
 }
