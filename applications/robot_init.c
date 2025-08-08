@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 15:12:53
+ * @LastEditTime: 2025-08-08 17:36:08
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -16,6 +16,7 @@
 #include "bsp_gpio.h"
 #include "dm_imu.h"
 #include "dwt.h"
+#include "gimbalcmd.h"
 #include "imu.h"
 #include "motor_task.h"
 #include "offline.h"
@@ -65,7 +66,7 @@ void applications_init(TX_BYTE_POOL *pool){
         #if defined (CHASSIS_BOARD)
         
         #elif defined (GIMBAL_BOARD)
-        
+        gimbal_task_init(pool);
         #endif
     #else  
         

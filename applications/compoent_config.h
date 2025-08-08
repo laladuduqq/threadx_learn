@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 14:59:34
+ * @LastEditTime: 2025-08-08 17:36:57
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -15,7 +15,7 @@
 //ulog配置宏定义
 #define LOG_ENABLE 1                            //启用日志
 #define LOG_LEVEL_INFO ULOG_INFO_LEVEL          //日志等级
-#define LOG_SETTING_UART huart6                 //使用的串口
+#define LOG_SETTING_UART huart1                 //使用的串口
 #define LOG_COLOR_ENABLE 1                      //启用颜色
 #define LOG_ASYNC_ENABLE 0                      //启用异步日志
 #if LOG_ASYNC_ENABLE //注意，下面宏定义只有在启用异步日志时才有效
@@ -160,6 +160,9 @@
 // robotcontrol配置宏定义
 #define ROBOT_CONTROL_THREAD_STACK_SIZE 1024    // 机器人控制线程栈大小
 #define ROBOT_CONTROL_THREAD_PRIORITY 8         // 机器人控制线程优先级
+//gimbal配置宏定义
+#define GIMBAL_THREAD_STACK_SIZE 1024 // 云台线程栈大小
+#define GIMBAL_THREAD_PRIORITY 9      // 云台线程优先级
 
 //rtos内存分配函数
 void* threadx_malloc(size_t size);
