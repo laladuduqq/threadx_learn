@@ -115,6 +115,21 @@ const char *ulog_level_name(ulog_level_t severity) {
   }
 }
 
+void ulog_raw(const char *fmt, ...) {
+  va_list ap;
+  int i;
+  va_start(ap, fmt);
+  vsnprintf(s_message, ULOG_MAX_MESSAGE_LENGTH, fmt, ap);
+  va_end(ap);
+
+  for (i=0; i<ULOG_MAX_SUBSCRIBERS; i++) {
+    if (s_subscribers[i].fn != NULL) {
+      // 这里我们使用ULOG_ALWAYS_LEVEL确保总是输出
+      s_subscribers[i].fn(ULOG_ALWAYS_LEVEL, s_message);
+    }
+  }
+}
+
 void ulog_message(ulog_level_t severity, const char *fmt, ...) {
   // Do not evaluate the log message if it will never be logged
   if (severity < s_lowest_log_level){

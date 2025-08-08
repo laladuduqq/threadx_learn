@@ -123,6 +123,7 @@ typedef enum {
   #define ULOG_ERROR(...) ulog_message(ULOG_ERROR_LEVEL, __VA_ARGS__)
   #define ULOG_CRITICAL(...) ulog_message(ULOG_CRITICAL_LEVEL, __VA_ARGS__)
   #define ULOG_ALWAYS(...) ulog_message(ULOG_ALWAYS_LEVEL, __VA_ARGS__)
+  #define ULOG_RAW(...) ulog_raw(__VA_ARGS__)
 #else
   // uLog vanishes when disabled at compile time...
   #define ULOG_INIT() do {} while(0)
@@ -137,6 +138,7 @@ typedef enum {
   #define ULOG_ERROR(f, ...) do {} while(0)
   #define ULOG_CRITICAL(f, ...) do {} while(0)
   #define ULOG_ALWAYS(f, ...) do {} while(0)
+   #define ULOG_RAW(...) do {} while(0)
 #endif
 
 typedef enum {
@@ -163,6 +165,7 @@ ulog_err_t ulog_subscribe(ulog_function_t fn, ulog_level_t threshold);
 ulog_err_t ulog_unsubscribe(ulog_function_t fn);
 const char *ulog_level_name(ulog_level_t level);
 void ulog_message(ulog_level_t severity, const char *fmt, ...);
+void ulog_raw(const char *fmt, ...);
 
 #ifdef __cplusplus
 }
