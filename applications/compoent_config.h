@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 14:15:40
+ * @LastEditTime: 2025-08-08 14:59:34
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -153,6 +153,13 @@
 #endif
 // #define USE_HAITAI_MOTOR     // 启用海泰电机
 // #define USE_SITAIWEI_MOTOR   // 启用斯泰威电机
+
+
+
+// applications配置宏定义
+// robotcontrol配置宏定义
+#define ROBOT_CONTROL_THREAD_STACK_SIZE 1024    // 机器人控制线程栈大小
+#define ROBOT_CONTROL_THREAD_PRIORITY 8         // 机器人控制线程优先级
 
 //rtos内存分配函数
 void* threadx_malloc(size_t size);
