@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-05 16:04:23
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-05 16:07:13
+ * @LastEditTime: 2025-08-08 17:51:04
  * @FilePath: /threadx_learn/BSP/CAN/bsp_can.h
  * @Description: 
  */
@@ -63,7 +63,7 @@ typedef struct
 /* CAN总线管理结构 */
 typedef struct {
     CAN_HandleTypeDef *hcan;
-    Can_Device devices[MAX_DEVICES_PER_BUS];
+    Can_Device devices[MAX_CAN_DEVICES_PER_BUS];
     TX_MUTEX tx_mutex;
     uint8_t device_count;
 } CANBusManager;

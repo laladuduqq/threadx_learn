@@ -5,6 +5,7 @@ add_library(applications STATIC
     robot_control/robot_control.c
     robot_control/robot_task.c
     gimbal/gimbalcmd.c
+    shoot/shootcmd.c
 )
 
 # 设置包含目录
@@ -13,6 +14,7 @@ target_include_directories(applications
         ${CMAKE_CURRENT_SOURCE_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/robot_control
         ${CMAKE_CURRENT_SOURCE_DIR}/gimbal
+        ${CMAKE_CURRENT_SOURCE_DIR}/shoot
 )
 
 # 链接必要的库

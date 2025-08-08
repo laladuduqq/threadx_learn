@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-01 17:51:42
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 17:36:57
+ * @LastEditTime: 2025-08-08 17:42:09
  * @FilePath: /threadx_learn/applications/compoent_config.h
  * @Description: 
  */
@@ -163,6 +163,9 @@
 //gimbal配置宏定义
 #define GIMBAL_THREAD_STACK_SIZE 1024 // 云台线程栈大小
 #define GIMBAL_THREAD_PRIORITY 9      // 云台线程优先级
+//shoot配置宏定义
+#define SHOOT_THREAD_STACK_SIZE 1024 // 发射线程栈大小
+#define SHOOT_THREAD_PRIORITY 10      // 发射线程优先级
 
 //rtos内存分配函数
 void* threadx_malloc(size_t size);

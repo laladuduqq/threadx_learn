@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-06 08:57:47
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 17:36:08
+ * @LastEditTime: 2025-08-08 17:47:38
  * @FilePath: /threadx_learn/applications/robot_init.c
  * @Description: 
  */
@@ -23,6 +23,7 @@
 #include "referee.h"
 #include "remote.h"
 #include "robot_task.h"
+#include "shootcmd.h"
 #include "subpub.h"
 #include "systemwatch.h"
 #include "ulog_port.h"
@@ -67,6 +68,7 @@ void applications_init(TX_BYTE_POOL *pool){
         
         #elif defined (GIMBAL_BOARD)
         gimbal_task_init(pool);
+        shoot_task_init(pool);
         #endif
     #else  
         
