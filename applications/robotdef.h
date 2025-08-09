@@ -31,8 +31,8 @@ extern "C"{
 
 #ifndef ONE_BOARD // 多板控制整车 （注意只能有一个生效）
     #if defined (ENGINEER_MODE) || defined (INFANTRY_MODE) || defined (SENTRY_MODE) || defined (HERO_MODE)
-        //#define CHASSIS_BOARD //底盘板
-        #define GIMBAL_BOARD  //云台板
+        #define CHASSIS_BOARD //底盘板
+        //#define GIMBAL_BOARD  //云台板
         // 检查是否出现主控板定义冲突,只允许一个开发板定义存在,否则编译会自动报错
         #if (defined(CHASSIS_BOARD) + defined(GIMBAL_BOARD)!=1)
         #error Conflict board definition! You can only define one board type.
@@ -117,11 +117,6 @@ extern "C"{
     #define CENTER_GIMBAL_OFFSET_X 0    // 云台旋转中心距底盘几何中心的距离,前后方向,云台位于正中心时默认设为0
     #define CENTER_GIMBAL_OFFSET_Y 0    // 云台旋转中心距底盘几何中心的距离,左右方向,云台位于正中心时默认设为0
     #define RADIUS_WHEEL 0.07             // 轮子半径(单位:m)
-    #define REDUCTION_RATIO_WHEEL 19.0f // 电机减速比,因为编码器量测的是转子的速度而不是输出轴的速度故需进行转换
-
-    #define GYRO2GIMBAL_DIR_YAW 1   // 陀螺仪数据相较于云台的yaw的方向,1为相同,-1为相反
-    #define GYRO2GIMBAL_DIR_PITCH 1 // 陀螺仪数据相较于云台的pitch的方向,1为相同,-1为相反
-    #define GYRO2GIMBAL_DIR_ROLL 1  // 陀螺仪数据相较于云台的roll的方向,1为相同,-1为相反
 
 #endif
 

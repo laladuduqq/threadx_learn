@@ -154,6 +154,12 @@ void chassis_thread_entry(ULONG thread_input)
                 break;
             }
 
+            if (CHASSIS_TYPE == 2)
+            {
+                chassis_cmd_recv->vx = chassis_cmd_recv->vx * 784;
+                chassis_cmd_recv->vy = chassis_cmd_recv->vy * 784;
+            }
+
             // 根据云台和底盘的角度offset将控制量映射到底盘坐标系上
             // 底盘逆时针旋转为角度正方向;云台命令的方向以云台指向的方向为x,采用右手系(x指向正北时y在正东)
             static float sin_theta, cos_theta,wheel_ops[4];

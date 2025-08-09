@@ -2,7 +2,7 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-08 17:26:24
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-09 10:00:40
+ * @LastEditTime: 2025-08-09 10:09:21
  * @FilePath: /threadx_learn/applications/gimbal/gimbalcmd.c
  * @Description: 
  */
@@ -202,7 +202,7 @@ void gimbal_thread_entry(ULONG thread_input)
             {
                 //DJIMotorEnable(big_yaw);
                 //DJIMotorEnable(small_yaw);
-                DMMotorEnable(pitch_motor); 
+                //DMMotorEnable(pitch_motor); 
             }
             else
             {

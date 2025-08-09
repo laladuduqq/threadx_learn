@@ -159,8 +159,8 @@ static void RemoteControlSet(Chassis_Ctrl_Cmd_s *Chassis_Ctrl,Shoot_Ctrl_Cmd_s *
         {
             if (get_device_status(remote_info->remote.sbus->offline_index)==STATE_ONLINE) 
             {
-                Chassis_Ctrl->vx = -1.0f * remote_info->remote.sbus->SBUS_CH.CH2;
-                Chassis_Ctrl->vy =  1.0f * remote_info->remote.sbus->SBUS_CH.CH1; 
+                Chassis_Ctrl->vx = -1.0f * remote_info->remote.sbus->SBUS_CH.CH2/(SBUS_CHX_DOWN-SBUS_CHX_BIAS);
+                Chassis_Ctrl->vy =  1.0f * remote_info->remote.sbus->SBUS_CH.CH1/(SBUS_CHX_DOWN-SBUS_CHX_BIAS); 
                 //云台控制部分
                 if (sbus_switch_is_up(remote_info->remote.sbus->SBUS_CH.CH6)) 
                 {
@@ -229,8 +229,8 @@ static void RemoteControlSet(Chassis_Ctrl_Cmd_s *Chassis_Ctrl,Shoot_Ctrl_Cmd_s *
         {
             if (get_device_status(remote_info->remote.dt7->offline_index)==STATE_ONLINE) 
             {
-                Chassis_Ctrl->vx = -1.0f * remote_info->remote.dt7->dt7_input.ch2;
-                Chassis_Ctrl->vy =  1.0f * remote_info->remote.dt7->dt7_input.ch1; 
+                Chassis_Ctrl->vx = -1.0f * remote_info->remote.dt7->dt7_input.ch2/(DT7_CH_VALUE_MAX-DT7_CH_VALUE_OFFSET);
+                Chassis_Ctrl->vy =  1.0f * remote_info->remote.dt7->dt7_input.ch1/(DT7_CH_VALUE_MAX-DT7_CH_VALUE_OFFSET); 
                 //云台控制部分
                 if (dt7_switch_is_mid(remote_info->remote.dt7->dt7_input.sw1)) 
                 {
@@ -287,8 +287,8 @@ static void RemoteControlSet(Chassis_Ctrl_Cmd_s *Chassis_Ctrl,Shoot_Ctrl_Cmd_s *
             {
                 if (get_device_status(remote_info->vt.vt03->offline_index)==STATE_ONLINE) 
                 {
-                    Chassis_Ctrl->vx = -1.0f * remote_info->vt.vt03->vt03_remote_data.channels.ch1;
-                    Chassis_Ctrl->vy =  1.0f * remote_info->vt.vt03->vt03_remote_data.channels.ch0; 
+                    Chassis_Ctrl->vx = -1.0f * remote_info->vt.vt03->vt03_remote_data.channels.ch1/(VT03_CH_VALUE_MAX-VT03_CH_VALUE_OFFSET);
+                    Chassis_Ctrl->vy =  1.0f * remote_info->vt.vt03->vt03_remote_data.channels.ch0/(VT03_CH_VALUE_MAX-VT03_CH_VALUE_OFFSET); 
                     //云台控制部分
                     if (remote_info->vt.vt03->vt03_remote_data.button_current.bit.switch_pos==0) 
                     {
