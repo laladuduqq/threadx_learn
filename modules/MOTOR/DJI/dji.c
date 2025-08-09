@@ -240,15 +240,11 @@ DJIMotor_t *DJIMotorInit(Motor_Init_Config_s *config)
             PIDInit(&DJIMotor->motor_controller.angle_PID, &config->controller_param_init_config.angle_PID);
             DJIMotor->motor_controller.other_angle_feedback_ptr = config->controller_param_init_config.other_angle_feedback_ptr;
             DJIMotor->motor_controller.other_speed_feedback_ptr = config->controller_param_init_config.other_speed_feedback_ptr;
-            DJIMotor->motor_controller.current_feedforward_ptr = config->controller_param_init_config.current_feedforward_ptr;
-            DJIMotor->motor_controller.speed_feedforward_ptr = config->controller_param_init_config.speed_feedforward_ptr;
             break;
         case CONTROL_LQR:
             LQRInit(&DJIMotor->motor_controller.lqr, &config->controller_param_init_config.lqr_config);
             DJIMotor->motor_controller.other_angle_feedback_ptr = config->controller_param_init_config.other_angle_feedback_ptr;
             DJIMotor->motor_controller.other_speed_feedback_ptr = config->controller_param_init_config.other_speed_feedback_ptr;
-            DJIMotor->motor_controller.current_feedforward_ptr = config->controller_param_init_config.current_feedforward_ptr;
-            DJIMotor->motor_controller.speed_feedforward_ptr = config->controller_param_init_config.speed_feedforward_ptr;
             break;
         case CONTROL_OTHER:
             // 未来添加其他控制算法的初始化
@@ -301,10 +297,8 @@ void DJIMotorSetRef(DJIMotor_t *motor, float ref)
     switch (motor->motor_settings.control_algorithm) 
     {
         case CONTROL_PID:
-            motor->motor_controller.pid_ref = ref;
-            break;
         case CONTROL_LQR:
-            motor->motor_controller.lqr_ref = ref;
+            motor->motor_controller.ref = ref;
             break;
         case CONTROL_OTHER:
             break;
@@ -331,7 +325,7 @@ static float CalculatePIDOutput(DJIMotor_t *motor)
 {
     float pid_measure, pid_ref;
     
-    pid_ref = motor->motor_controller.pid_ref;
+    pid_ref = motor->motor_controller.ref;
     if (motor->motor_settings.motor_reverse_flag == MOTOR_DIRECTION_REVERSE) {pid_ref *= -1;}
 
     // pid_ref会顺次通过被启用的闭环充当数据的载体
@@ -343,25 +337,20 @@ static float CalculatePIDOutput(DJIMotor_t *motor)
         else
             pid_measure = motor->measure.total_angle; 
 
-        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) 
-           pid_measure *= -1;
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) pid_measure *= -1;
         // 更新pid_ref进入下一个环
         pid_ref = PIDCalculate(&motor->motor_controller.angle_PID, pid_measure, pid_ref);
     }
     // 计算速度环,(外层闭环为速度或位置)且(启用速度环)时会计算速度环
     if ((motor->motor_settings.close_loop_type & SPEED_LOOP) && (motor->motor_settings.outer_loop_type & (ANGLE_LOOP | SPEED_LOOP)))
     {
-        if (motor->motor_settings.feedforward_flag & SPEED_FEEDFORWARD)
-            pid_ref += *motor->motor_controller.speed_feedforward_ptr;
-
         if (motor->motor_settings.speed_feedback_source == OTHER_FEED)
             pid_measure = *motor->motor_controller.other_speed_feedback_ptr;
         else // MOTOR_FEED
             pid_measure = motor->measure.speed_aps;
 
-        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) 
-           pid_measure *= -1;
-        // 更新pid_ref进入下一个环
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) pid_measure *= -1;
+        // 更新pid_ref
         pid_ref = PIDCalculate(&motor->motor_controller.speed_PID, pid_measure, pid_ref);
     }
 
@@ -370,16 +359,17 @@ static float CalculatePIDOutput(DJIMotor_t *motor)
 
 static float CalculateLQROutput(DJIMotor_t *motor)
 {
-    float degree = 0, angular_velocity = 0;
+    float degree=0.0f,angular_velocity=0.0f,lqr_ref=0.0f;
+    
+    lqr_ref = motor->motor_controller.ref ;
     
     if(motor->motor_settings.motor_reverse_flag == MOTOR_DIRECTION_REVERSE)
     {
-        motor->motor_controller.lqr_ref *= -1;
+        lqr_ref *= -1;
     }
 
     // 位置状态计算
-    if ((motor->motor_settings.close_loop_type & ANGLE_LOOP) && 
-        motor->motor_settings.outer_loop_type == ANGLE_LOOP)
+    if ((motor->motor_settings.close_loop_type & ANGLE_LOOP) && motor->motor_settings.outer_loop_type == ANGLE_LOOP)
     {
         degree = (motor->motor_settings.angle_feedback_source == OTHER_FEED) ?
                  *motor->motor_controller.other_angle_feedback_ptr :
@@ -389,18 +379,16 @@ static float CalculateLQROutput(DJIMotor_t *motor)
     }
 
     // 速度状态计算
-    if ((motor->motor_settings.close_loop_type & SPEED_LOOP) && 
-        (motor->motor_settings.outer_loop_type & (ANGLE_LOOP | SPEED_LOOP)))
+    if ((motor->motor_settings.close_loop_type & SPEED_LOOP) && (motor->motor_settings.outer_loop_type & (ANGLE_LOOP | SPEED_LOOP)))
     {
         angular_velocity = (motor->motor_settings.speed_feedback_source == OTHER_FEED) ?
                  *motor->motor_controller.other_speed_feedback_ptr :
                  motor->measure.speed_aps;
+
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) angular_velocity *= -1;
     }
 
-    float torque = LQRCalculate(&motor->motor_controller.lqr, 
-                               degree, 
-                               angular_velocity, 
-                               motor->motor_controller.lqr_ref);
+    float torque = LQRCalculate(&motor->motor_controller.lqr, degree, angular_velocity, lqr_ref);
 
     if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) torque *= -1;
 

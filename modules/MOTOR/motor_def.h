@@ -27,14 +27,6 @@ typedef enum
     ALL_THREE_LOOP = 0x7, // 0b0111
 } Closeloop_Type_e;
 
-typedef enum
-{
-    FEEDFORWARD_NONE = 0x00,        // 0b00
-    CURRENT_FEEDFORWARD = 0x01,     // 0b01
-    SPEED_FEEDFORWARD = 0x02,       // 0b10
-    CURRENT_AND_SPEED_FEEDFORWARD = CURRENT_FEEDFORWARD | SPEED_FEEDFORWARD,
-} Feedfoward_Type_e;
-
 /* 反馈来源设定,若设为OTHER_FEED则需要指定数据来源指针,详见Motor_Controller_s*/
 typedef enum
 {
@@ -86,7 +78,6 @@ typedef struct
     Feedback_Reverse_Flag_e feedback_reverse_flag; // 反馈是否反向
     Feedback_Source_e angle_feedback_source;       // 角度反馈类型
     Feedback_Source_e speed_feedback_source;       // 速度反馈类型
-    Feedfoward_Type_e feedforward_flag;            // 前馈标志
     Control_Algorithm_Type_e control_algorithm;    // 控制算法类型
     PowerControlState_e PowerControlState;         //功率开关
 
@@ -97,16 +88,12 @@ typedef struct
 {
     const float *other_angle_feedback_ptr; // 其他反馈来源的反馈数据指针
     const float *other_speed_feedback_ptr;
-    const float *speed_feedforward_ptr;
-    const float *current_feedforward_ptr;
-
 
     PIDInstance speed_PID;
     PIDInstance angle_PID;
     LQRInstance lqr; // LQR控制器实例
 
-    float pid_ref; // 将会作为每个环的输入和输出顺次通过串级闭环
-    float lqr_ref; // LQR控制器的参考输入
+    float ref; // 参考输入
 } Motor_Controller_s;
 
 /* 电机类型枚举 */
