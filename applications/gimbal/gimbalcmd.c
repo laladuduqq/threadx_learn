@@ -2,11 +2,12 @@
  * @Author: laladuduqq 2807523947@qq.com
  * @Date: 2025-08-08 17:26:24
  * @LastEditors: laladuduqq 2807523947@qq.com
- * @LastEditTime: 2025-08-08 17:34:51
+ * @LastEditTime: 2025-08-09 10:00:40
  * @FilePath: /threadx_learn/applications/gimbal/gimbalcmd.c
  * @Description: 
  */
 #include "can.h"
+#include "compensation.h"
 #include "compoent_config.h"
 #include "tx_api.h"
 #include "damiao.h"
@@ -69,7 +70,6 @@ void gimbal_init(void)
                     .output_max = 2.223,
                     .output_min =-2.223,
                     .state_dim = 2,
-                    .compensation_type =COMPENSATION_NONE,
                 }
             },
             .controller_setting_init_config = {
@@ -111,7 +111,6 @@ void gimbal_init(void)
                     .output_max = 2.223,
                     .output_min =-2.223,
                     .state_dim = 2,
-                    .compensation_type =COMPENSATION_NONE,
                 }
             },
             .controller_setting_init_config = {
@@ -155,9 +154,7 @@ void gimbal_init(void)
                     .output_max = 7,
                     .output_min = -7,
                     .state_dim = 2,
-                    .compensation_type =COMPENSATION_GRAVITY,
-                    .arm_length = 0.09,
-                    .gravity_force = 16,
+                    .feedforward_func = create_gravity_compensation_wrapper(16,0.09)
                 }
             },
             .controller_setting_init_config = {
@@ -203,8 +200,8 @@ void gimbal_thread_entry(ULONG thread_input)
             small_yaw_offset = *(imu->YawTotalAngle) - small_yaw->measure.total_angle; 
             if (gimbal_cmd_recv->gimbal_mode != GIMBAL_ZERO_FORCE)
             {
-                DJIMotorEnable(big_yaw);
-                DJIMotorEnable(small_yaw);
+                //DJIMotorEnable(big_yaw);
+                //DJIMotorEnable(small_yaw);
                 DMMotorEnable(pitch_motor); 
             }
             else
@@ -217,14 +214,6 @@ void gimbal_thread_entry(ULONG thread_input)
             {
                 case GIMBAL_KEEPING_SMALL_YAW:
                 {
-                    LQR_Init_Config_s lqr_config ={
-                        .K ={22.36f,4.05f},
-                        .output_max = 2.223,
-                        .output_min =-2.223,
-                        .state_dim = 2,
-                        .compensation_type =COMPENSATION_NONE,
-                    };
-                    DJIMotorOuterLoop(big_yaw, ANGLE_LOOP, &lqr_config);
                     DJIMotorSetRef(big_yaw,auto_angle_record + gimbal_cmd_recv->yaw);
                     DMMotorSetRef(pitch_motor, gimbal_cmd_recv->pitch); 
                     DJIMotorSetRef(small_yaw, small_yaw_offset);
@@ -232,14 +221,6 @@ void gimbal_thread_entry(ULONG thread_input)
                 }
                 case GIMBAL_KEEPING_BIG_YAW:
                 {
-                    LQR_Init_Config_s lqr_config ={
-                        .K ={22.36f,4.05f},
-                        .output_max = 2.223,
-                        .output_min =-2.223,
-                        .state_dim = 2,
-                        .compensation_type =COMPENSATION_NONE,
-                    };
-                    DJIMotorOuterLoop(big_yaw, ANGLE_LOOP, &lqr_config);
                     DJIMotorSetRef(big_yaw,auto_angle_record + gimbal_cmd_recv->yaw);
                     DMMotorSetRef(pitch_motor, gimbal_cmd_recv->pitch);
                     DJIMotorSetRef(small_yaw, gimbal_cmd_recv->small_yaw + small_yaw_offset);

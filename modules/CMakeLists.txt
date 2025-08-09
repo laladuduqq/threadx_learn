@@ -6,6 +6,7 @@ add_library(modules STATIC
         algorithm/LQR.c 
         algorithm/QuaternionEKF.c 
         algorithm/user_lib.c 
+        algorithm/compensation.c
         BMI088/BMI088.c
         systemwatch/systemwatch.c
         BEEP/beep.c

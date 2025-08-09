@@ -1,5 +1,6 @@
 #include "damiao.h"
 #include "arm_math.h"
+#include "motor_def.h"
 #include "offline.h"
 #include "tx_api.h"
 #include <stdint.h>
@@ -224,7 +225,6 @@ DMMOTOR_t *DMMotorInit(Motor_Init_Config_s *config,uint32_t DM_Mode_type){
     switch (config->controller_setting_init_config.control_algorithm) {
         case CONTROL_PID:
             // motor controller init 电机控制器初始化
-            PIDInit(&DMMotor->motor_controller.current_PID, &config->controller_param_init_config.current_PID);
             PIDInit(&DMMotor->motor_controller.speed_PID, &config->controller_param_init_config.speed_PID);
             PIDInit(&DMMotor->motor_controller.angle_PID, &config->controller_param_init_config.angle_PID);
             DMMotor->motor_controller.other_angle_feedback_ptr = config->controller_param_init_config.other_angle_feedback_ptr;
@@ -300,9 +300,89 @@ void DMMotorChangeFeed(DMMOTOR_t *motor, Closeloop_Type_e loop, Feedback_Source_
         ULOG_TAG_ERROR("loop type error, check and func param\n");
 }
 
+static float CalculatePIDOutput(DMMOTOR_t *motor)
+{
+    float pid_measure, pid_ref;
+    
+    pid_ref = motor->motor_controller.pid_ref;
+    if (motor->motor_settings.motor_reverse_flag == MOTOR_DIRECTION_REVERSE) {pid_ref *= -1;}
+
+    // pid_ref会顺次通过被启用的闭环充当数据的载体
+    // 计算位置环,只有启用位置环且外层闭环为位置时会计算速度环输出
+    if ((motor->motor_settings.close_loop_type & ANGLE_LOOP) && motor->motor_settings.outer_loop_type == ANGLE_LOOP)
+    {
+        if (motor->motor_settings.angle_feedback_source == OTHER_FEED)
+            pid_measure = *motor->motor_controller.other_angle_feedback_ptr;
+        else
+            pid_measure = motor->measure.total_angle; 
+
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) 
+           pid_measure *= -1;
+        // 更新pid_ref进入下一个环
+        pid_ref = PIDCalculate(&motor->motor_controller.angle_PID, pid_measure, pid_ref);
+    }
+    // 计算速度环,(外层闭环为速度或位置)且(启用速度环)时会计算速度环
+    if ((motor->motor_settings.close_loop_type & SPEED_LOOP) && (motor->motor_settings.outer_loop_type & (ANGLE_LOOP | SPEED_LOOP)))
+    {
+        if (motor->motor_settings.feedforward_flag & SPEED_FEEDFORWARD)
+            pid_ref += *motor->motor_controller.speed_feedforward_ptr;
+
+        if (motor->motor_settings.speed_feedback_source == OTHER_FEED)
+            pid_measure = *motor->motor_controller.other_speed_feedback_ptr;
+        else // MOTOR_FEED
+            pid_measure = motor->measure.velocity;
+
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) 
+           pid_measure *= -1;
+        // 更新pid_ref进入下一个环
+        pid_ref = PIDCalculate(&motor->motor_controller.speed_PID, pid_measure, pid_ref);
+    }
+
+    return pid_ref;
+}
+
+static float CalculateLQROutput(DMMOTOR_t *motor)
+{
+    float degree = 0, angular_velocity = 0;
+    
+    if(motor->motor_settings.motor_reverse_flag == MOTOR_DIRECTION_REVERSE)
+    {
+        motor->motor_controller.lqr_ref *= -1;
+    }
+
+    // 位置状态计算
+    if ((motor->motor_settings.close_loop_type & ANGLE_LOOP) && 
+        motor->motor_settings.outer_loop_type == ANGLE_LOOP)
+    {
+        degree = (motor->motor_settings.angle_feedback_source == OTHER_FEED) ?
+                 *motor->motor_controller.other_angle_feedback_ptr :
+                 motor->measure.total_angle;
+
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) degree *= -1;
+    }
+
+    // 速度状态计算
+    if ((motor->motor_settings.close_loop_type & SPEED_LOOP) && 
+        (motor->motor_settings.outer_loop_type & (ANGLE_LOOP | SPEED_LOOP)))
+    {
+        angular_velocity = (motor->motor_settings.speed_feedback_source == OTHER_FEED) ?
+                 *motor->motor_controller.other_speed_feedback_ptr :
+                 motor->measure.velocity;
+        if (motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE) angular_velocity *= -1;
+    }
+
+    float torque = LQRCalculate(&motor->motor_controller.lqr, 
+                               degree, 
+                               angular_velocity, 
+                               motor->motor_controller.lqr_ref);
+
+
+    return torque;
+}
+
 void DMMotorcontrol(void){
     DMMOTOR_t *motor =NULL;
-    float state0,state1;
+    float control_output;
 
     for (size_t i = 0; i < idx; ++i){
         if (i >= DJI_MOTOR_CNT || dmm_motor_list[i].can_device == NULL){continue;}      
@@ -317,7 +397,6 @@ void DMMotorcontrol(void){
             if (motor->motor_settings.control_algorithm == CONTROL_PID)
             {
                 // 当电机停止或离线时，将PID控制器输出设为0
-                motor->motor_controller.current_PID.Output = 0;
                 motor->motor_controller.speed_PID.Output = 0;
                 motor->motor_controller.angle_PID.Output = 0;
             }
@@ -328,37 +407,57 @@ void DMMotorcontrol(void){
             {
                 case MIT_MODE:
                 {
-                    if(motor->motor_settings.feedback_reverse_flag == FEEDBACK_DIRECTION_REVERSE)
+                    // 根据控制算法计算输出
+                    switch (motor->motor_settings.control_algorithm) 
                     {
-                        motor->motor_controller.lqr.feedbackreverseflag =1;
+                        case CONTROL_PID:
+                            control_output = CalculatePIDOutput(motor);
+                            break;
+                        case CONTROL_LQR:
+                            control_output = CalculateLQROutput(motor);
+                            break;
+                        default:
+                            control_output = 0;
+                            break;
                     }
-                    if (motor->motor_settings.angle_feedback_source == OTHER_FEED) 
-                    {state0 = *motor->motor_controller.other_angle_feedback_ptr;}
-                    else 
-                    {state0 = motor->measure.position;} // MOTOR_FEED,对total angle闭环,防止在边界处出现突跃
-
-                    if (motor->motor_settings.speed_feedback_source == OTHER_FEED) 
-                    {state1 = *motor->motor_controller.other_speed_feedback_ptr;}
-                    else  
-                    {state1 = motor->measure.velocity;}
-                    
-                    float torque = LQRCalculate(&motor->motor_controller.lqr, state0, state1,motor->motor_controller.lqr_ref);
-                    mit_ctrl(motor, 0, 0, 0, 0, torque);
+                    mit_ctrl(motor, 0, 0, 0, 0, control_output);
                     break;
                 }
                 case POS_MODE:
                 {               
-                    float pid_ref = 0.0f;             // 电机PID测量值和设定值
-                    if (motor->stop_flag == MOTOR_STOP) { DMMotorSetMode(DM_CMD_RESET_MODE, motor); };
-                    pos_speed_ctrl(motor, pid_ref, PI);
+                    // 根据控制算法计算输出
+                    switch (motor->motor_settings.control_algorithm) 
+                    {
+                        case CONTROL_PID:
+                            control_output = motor->motor_controller.pid_ref;
+                            break;
+                        case CONTROL_LQR:
+                            control_output = motor->motor_controller.lqr_ref;
+                            break;
+                        default:
+                            control_output = 0;
+                            break;
+                    }
+                    LIMIT_MIN_MAX(control_output, DM_P_MIN, DM_P_MAX);
+                    pos_speed_ctrl(motor, control_output, PI);
                     break;
                 }
                 case SPEED_MODE:
                 {
-                    float pid_ref = 0.0f;             // 电机PID测量值和设定值
-                    LIMIT_MIN_MAX(pid_ref, DM_V_MIN, DM_V_MAX);
-                    if (motor->stop_flag == MOTOR_STOP) { DMMotorSetMode(DM_CMD_RESET_MODE, motor); };
-                    speed_ctrl(motor, pid_ref);
+                    switch (motor->motor_settings.control_algorithm) 
+                    {
+                        case CONTROL_PID:
+                            control_output = motor->motor_controller.pid_ref;
+                            break;
+                        case CONTROL_LQR:
+                            control_output = motor->motor_controller.lqr_ref;
+                            break;
+                        default:
+                            control_output = 0;
+                            break;
+                    }
+                    LIMIT_MIN_MAX(control_output, DM_V_MIN, DM_V_MAX);
+                    speed_ctrl(motor, control_output);
                     break;
                 }
             }
